@@ -1,16 +1,20 @@
+import { useState } from 'react'
 import { Outlet } from 'react-router-dom'
+import { Sidebar } from './Sidebar'
+import { Navbar } from './Navbar'
 
 export default function DashboardLayout() {
+  const [sidebarOpen, setSidebarOpen] = useState(false)
+
   return (
-    <div className="flex min-h-screen bg-page">
-      <aside className="w-64 bg-surface border-r border-border">
-        <p className="p-4 font-bold text-lepkom-green">HRIS LepKOM</p>
-      </aside>
-      <div className="flex-1 flex flex-col">
-        <header className="h-14 bg-surface border-b border-border flex items-center px-6">
-          <span className="text-sm text-gray-500">Navbar placeholder</span>
-        </header>
-        <main className="flex-1 p-6">
+    <div className="min-h-screen bg-page flex">
+      {/* Sidebar Component */}
+      <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
+
+      {/* Main Container Offset by Sidebar Width on Desktop */}
+      <div className="flex-1 flex flex-col lg:pl-64 min-w-0">
+        <Navbar onMenuClick={() => setSidebarOpen(true)} />
+        <main className="flex-1 p-4 sm:p-6 overflow-x-hidden">
           <Outlet />
         </main>
       </div>
