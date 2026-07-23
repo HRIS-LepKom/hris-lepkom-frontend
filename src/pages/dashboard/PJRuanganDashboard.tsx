@@ -1,13 +1,14 @@
 import { useNavigate } from 'react-router-dom'
 import { Card, Button, Badge } from '@/components/ui'
 import { useAuth } from '@/hooks/useAuth'
+import { CalasClassChartWidget } from '@/components/dashboard/CalasClassChartWidget'
 
 export default function PJRuanganDashboard() {
   const navigate = useNavigate()
   const { user } = useAuth()
 
   return (
-    <div className="space-y-6 max-w-5xl mx-auto pb-12">
+    <div className="space-y-6 max-w-7xl mx-auto pb-12">
       {/* Welcome Banner */}
       <div className="bg-gradient-to-r from-purple-800 to-indigo-900 text-white rounded-2xl p-6 sm:p-8 shadow-md flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
@@ -43,6 +44,9 @@ export default function PJRuanganDashboard() {
           </Badge>
         </div>
       </Card>
+
+      {/* ─── STATISTIK UTAMA: CALAS PER KELAS KULIAH (CHART -> TABEL -> STATUS CARD) ─── */}
+      <CalasClassChartWidget />
 
       {/* PJ Task Shortcuts */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">

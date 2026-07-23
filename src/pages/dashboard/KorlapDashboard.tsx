@@ -1,6 +1,7 @@
 import { useNavigate } from 'react-router-dom'
 import { Card, Button } from '@/components/ui'
 import { useAuth } from '@/hooks/useAuth'
+import { CalasClassChartWidget } from '@/components/dashboard/CalasClassChartWidget'
 
 export default function KorlapDashboard() {
   const navigate = useNavigate()
@@ -30,47 +31,8 @@ export default function KorlapDashboard() {
         </Button>
       </div>
 
-      {/* 3 Stat Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
-        <Card className="hover:shadow-md transition-shadow cursor-pointer" onClick={() => navigate('/scheduling/session-list')}>
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Sesi Ujian Dijadwalkan</p>
-              <p className="text-3xl font-extrabold text-lepkom-green mt-1">4</p>
-              <p className="text-xs text-gray-400 font-medium mt-1">Ujian Praktek & Project</p>
-            </div>
-            <div className="w-12 h-12 rounded-xl bg-green-50 text-lepkom-green flex items-center justify-center font-bold text-xl">
-              📅
-            </div>
-          </div>
-        </Card>
-
-        <Card className="hover:shadow-md transition-shadow cursor-pointer" onClick={() => navigate('/korlap/rooms')}>
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Ruangan Berfungsi</p>
-              <p className="text-3xl font-extrabold text-blue-600 mt-1">4 / 4</p>
-              <p className="text-xs text-gray-400 font-medium mt-1">Ruang 121, 122, 124, 125</p>
-            </div>
-            <div className="w-12 h-12 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center font-bold text-xl">
-              🏢
-            </div>
-          </div>
-        </Card>
-
-        <Card className="hover:shadow-md transition-shadow cursor-pointer" onClick={() => navigate('/korlap/kanban')}>
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Overview Kanban</p>
-              <p className="text-3xl font-extrabold text-amber-600 mt-1">Ready</p>
-              <p className="text-xs text-gray-400 font-medium mt-1">Monitoring Ruangan</p>
-            </div>
-            <div className="w-12 h-12 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center font-bold text-xl">
-              📌
-            </div>
-          </div>
-        </Card>
-      </div>
+      {/* ─── STATISTIK UTAMA: CALAS PER KELAS KULIAH (CHART -> TABEL -> STATUS CARD) ─── */}
+      <CalasClassChartWidget />
 
       {/* Quick Action Shortcuts */}
       <Card header="Pintasan Aksi Korlap">
