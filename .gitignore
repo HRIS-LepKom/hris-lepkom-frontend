@@ -30,3 +30,4 @@ coverage/
 # agent context
 CLAUDE.md
 AGENTS.md
+.hermes-tmp*

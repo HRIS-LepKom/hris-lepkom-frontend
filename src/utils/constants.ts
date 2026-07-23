@@ -1,14 +1,6 @@
-export const ASISTEN_ROLES = [
-  'super_admin',
-  'pj_soal_materi',
-  'penanggung_jawab_ruangan',
-  'koordinator_lapangan',
-  'asisten_penilai',
-  'asisten',
-  'staff',
-] as const
+import type { Role, TahapRekrutmen } from '@/types'
 
-export const ROLE_LABELS: Record<string, string> = {
+export const ROLE_LABELS: Record<Role, string> = {
   super_admin: 'Super Admin',
   pj_soal_materi: 'PJ Soal/Materi',
   penanggung_jawab_ruangan: 'PJ Ruangan',
@@ -18,7 +10,7 @@ export const ROLE_LABELS: Record<string, string> = {
   staff: 'Staff',
 }
 
-export const TAHAP_LABELS: Record<string, string> = {
+export const TAHAP_LABELS: Record<TahapRekrutmen, string> = {
   registrasi: 'Registrasi',
   screening: 'Screening',
   biodata_dokumen: 'Biodata & Dokumen',
