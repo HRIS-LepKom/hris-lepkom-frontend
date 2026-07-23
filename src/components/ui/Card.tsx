@@ -5,6 +5,7 @@ export interface CardProps {
   header?: React.ReactNode
   className?: string
   bodyClassName?: string
+  onClick?: () => void
 }
 
 export const Card: React.FC<CardProps> = ({
@@ -12,9 +13,13 @@ export const Card: React.FC<CardProps> = ({
   header,
   className = '',
   bodyClassName = '',
+  onClick,
 }) => {
   return (
-    <div className={`bg-surface rounded-lg border border-border shadow-sm ${className}`.trim()}>
+    <div
+      onClick={onClick}
+      className={`bg-surface rounded-lg border border-border shadow-sm ${className}`.trim()}
+    >
       {header && (
         <div className="border-b border-border px-6 py-4 font-semibold text-gray-800">
           {header}
