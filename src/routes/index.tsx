@@ -18,6 +18,9 @@ import PJSoalDashboard from '@/pages/dashboard/PJSoalDashboard'
 import BiodataForm from '@/pages/candidates/BiodataForm'
 import DocumentUpload from '@/pages/candidates/DocumentUpload'
 import TimelineTracker from '@/pages/candidates/TimelineTracker'
+import ExamDownload from '@/pages/candidates/ExamDownload'
+import ExamUploadPraktek from '@/pages/candidates/ExamUploadPraktek'
+import ExamUploadProject from '@/pages/candidates/ExamUploadProject'
 import ScoreForm from '@/pages/evaluations/ScoreForm'
 import ScoreHistory from '@/pages/evaluations/ScoreHistory'
 import RoomAssignment from '@/pages/scheduling/RoomAssignment'
@@ -57,6 +60,9 @@ export const router = createBrowserRouter([
       { path: 'calas/biodata', element: <BiodataForm /> },
       { path: 'calas/documents', element: <DocumentUpload /> },
       { path: 'calas/timeline', element: <TimelineTracker /> },
+      { path: 'calas/exam-download', element: <ExamDownload /> },
+      { path: 'calas/exam-praktek', element: <ExamUploadPraktek /> },
+      { path: 'calas/exam-project', element: <ExamUploadProject /> },
       { path: 'penilai', element: <PenilaiDashboard /> },
       { path: 'penilai/score/:id', element: <ScoreForm /> },
       { path: 'penilai/history', element: <ScoreHistory /> },

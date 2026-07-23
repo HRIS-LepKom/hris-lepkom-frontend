@@ -31,6 +31,24 @@ export async function uploadMyDocument(file: File, type: 'cv' | 'krs' | 'rangkum
   return res.data
 }
 
+export async function uploadExamPraktek(file: File) {
+  const formData = new FormData()
+  formData.append('file', file)
+  const res = await api.post<ApiResponse<{ url: string }>>('/calas/me/exam-praktek', formData, {
+    headers: { 'Content-Type': 'multipart/form-data' },
+  })
+  return res.data
+}
+
+export async function uploadExamProject(file: File) {
+  const formData = new FormData()
+  formData.append('file', file)
+  const res = await api.post<ApiResponse<{ url: string }>>('/calas/me/exam-project', formData, {
+    headers: { 'Content-Type': 'multipart/form-data' },
+  })
+  return res.data
+}
+
 export async function updateTimeline(id: string, tahapSaatIni: string, hasil?: string) {
   const res = await api.put<ApiResponse<Calas>>(`/calas/${id}/timeline`, { tahapSaatIni, hasil })
   return res.data
