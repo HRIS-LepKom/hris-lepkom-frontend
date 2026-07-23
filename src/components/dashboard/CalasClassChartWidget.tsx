@@ -93,23 +93,29 @@ export const CalasClassChartWidget: React.FC = () => {
         }
       >
         <div className="py-2 space-y-6">
-          {/* Custom Animated SVG Bar Chart */}
-          <div className="relative pt-6 pb-2 px-2 bg-page/60 rounded-xl border border-border">
+          {/* Custom Animated SVG Bar Chart Container */}
+          <div className="relative pt-8 pb-4 px-3 bg-page/60 rounded-xl border border-border overflow-hidden">
             {/* Chart Grid Lines */}
-            <div className="absolute inset-0 px-4 py-6 flex flex-col justify-between pointer-events-none opacity-30">
+            <div className="absolute inset-0 px-4 py-8 flex flex-col justify-between pointer-events-none opacity-30">
               <div className="border-b border-gray-300 w-full" />
               <div className="border-b border-gray-300 w-full" />
               <div className="border-b border-gray-300 w-full" />
             </div>
 
-            {/* Hover Tooltip Overlay */}
-            {hoveredClass && (
-              <div className="mb-4 p-2.5 bg-gray-900 text-white rounded-lg text-xs shadow-lg flex items-center justify-between animate-in fade-in duration-150">
-                <span className="font-bold font-mono text-lepkom-green">{hoveredClass.kodeKelas}</span>
-                <span>{hoveredClass.jurusan}</span>
-                <span className="font-extrabold text-yellow-400">{hoveredClass.totalCalas} Calas ({hoveredClass.persentase}%)</span>
-              </div>
-            )}
+            {/* Absolute Floating Tooltip (No Layout Shift) */}
+            <div className="absolute top-2 left-3 right-3 h-7 z-20 pointer-events-none flex items-center justify-between">
+              {hoveredClass ? (
+                <div className="w-full px-3 py-1 bg-gray-900 text-white rounded-md text-xs shadow-sm flex items-center justify-between animate-in fade-in duration-150">
+                  <span className="font-bold font-mono text-lepkom-green">{hoveredClass.kodeKelas}</span>
+                  <span className="text-gray-300 truncate max-w-[200px]">{hoveredClass.jurusan}</span>
+                  <span className="font-extrabold text-yellow-400">{hoveredClass.totalCalas} Calas ({hoveredClass.persentase}%)</span>
+                </div>
+              ) : (
+                <div className="text-[11px] text-gray-400 font-medium italic px-1">
+                  Arahkan kursor ke batang chart untuk melihat detail rincian...
+                </div>
+              )}
+            </div>
 
             {/* Bars */}
             <div className="flex items-end justify-between gap-2 sm:gap-4 h-56 pt-6 pb-2 px-2 relative z-10">
