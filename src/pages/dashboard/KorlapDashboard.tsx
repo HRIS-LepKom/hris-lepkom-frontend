@@ -1,0 +1,1 @@
+export default function KorlapDashboard() { return <div>Korlap Dashboard</div> }

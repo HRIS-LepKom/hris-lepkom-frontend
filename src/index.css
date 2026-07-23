@@ -1,0 +1,13 @@
+@import "tailwindcss";
+
+@theme {
+  --color-lepkom-green: #156935;
+  --color-lepkom-blue: #23376c;
+  --color-page: #F3F6FB;
+  --color-surface: #FFFFFF;
+  --color-border: #E5E7EB;
+  --color-status-green: #10B981;
+  --color-status-yellow: #F59E0B;
+  --color-status-red: #EF4444;
+  --font-sans: "Inter", sans-serif;
+}

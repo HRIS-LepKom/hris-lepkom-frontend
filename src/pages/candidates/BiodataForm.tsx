@@ -1,0 +1,1 @@
+export default function BiodataForm() { return <div>Biodata Form</div> }

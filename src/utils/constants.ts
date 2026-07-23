@@ -1,0 +1,29 @@
+export const ASISTEN_ROLES = [
+  'super_admin',
+  'pj_soal_materi',
+  'penanggung_jawab_ruangan',
+  'koordinator_lapangan',
+  'asisten_penilai',
+  'asisten',
+  'staff',
+] as const
+
+export const ROLE_LABELS: Record<string, string> = {
+  super_admin: 'Super Admin',
+  pj_soal_materi: 'PJ Soal/Materi',
+  penanggung_jawab_ruangan: 'PJ Ruangan',
+  koordinator_lapangan: 'Koordinator Lapangan',
+  asisten_penilai: 'Asisten Penilai',
+  asisten: 'Asisten',
+  staff: 'Staff',
+}
+
+export const TAHAP_LABELS: Record<string, string> = {
+  registrasi: 'Registrasi',
+  screening: 'Screening',
+  biodata_dokumen: 'Biodata & Dokumen',
+  ujian_praktek: 'Ujian Praktek',
+  ujian_project: 'Ujian Project',
+  keputusan_akhir: 'Keputusan Akhir',
+  selesai: 'Selesai',
+}

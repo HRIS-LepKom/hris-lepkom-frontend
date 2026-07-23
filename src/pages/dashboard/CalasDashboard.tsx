@@ -1,0 +1,1 @@
+export default function CalasDashboard() { return <div>Calas Dashboard</div> }

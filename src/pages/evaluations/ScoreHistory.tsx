@@ -1,0 +1,1 @@
+export default function ScoreHistory() { return <div>Score History</div> }

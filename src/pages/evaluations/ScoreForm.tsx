@@ -1,0 +1,1 @@
+export default function ScoreForm() { return <div>Score Form</div> }

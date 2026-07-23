@@ -1,0 +1,1 @@
+export default function PJRuanganDashboard() { return <div>PJ Ruangan Dashboard</div> }

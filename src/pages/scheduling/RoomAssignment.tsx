@@ -1,0 +1,1 @@
+export default function RoomAssignment() { return <div>Room Assignment</div> }

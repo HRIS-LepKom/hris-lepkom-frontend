@@ -1,0 +1,58 @@
+import { createBrowserRouter } from 'react-router-dom'
+import { ProtectedRoute } from './guards'
+import DashboardLayout from '@/components/layout/DashboardLayout'
+import Login from '@/pages/auth/Login'
+import Register from '@/pages/auth/Register'
+import ForgotPassword from '@/pages/auth/ForgotPassword'
+import AdminDashboard from '@/pages/dashboard/AdminDashboard'
+import CalasDashboard from '@/pages/dashboard/CalasDashboard'
+import PenilaiDashboard from '@/pages/dashboard/PenilaiDashboard'
+import KorlapDashboard from '@/pages/dashboard/KorlapDashboard'
+import PJRuanganDashboard from '@/pages/dashboard/PJRuanganDashboard'
+import PJSoalDashboard from '@/pages/dashboard/PJSoalDashboard'
+import BiodataForm from '@/pages/candidates/BiodataForm'
+import DocumentUpload from '@/pages/candidates/DocumentUpload'
+import TimelineTracker from '@/pages/candidates/TimelineTracker'
+import ScoreForm from '@/pages/evaluations/ScoreForm'
+import ScoreHistory from '@/pages/evaluations/ScoreHistory'
+import RoomAssignment from '@/pages/scheduling/RoomAssignment'
+import KanbanBoard from '@/pages/scheduling/KanbanBoard'
+import AssistantsPage from '@/pages/master-data/AssistantsPage'
+import MaterialsPage from '@/pages/master-data/MaterialsPage'
+import QuestionsPage from '@/pages/master-data/QuestionsPage'
+import QuestionCardsPage from '@/pages/master-data/QuestionCardsPage'
+import NotFound from '@/pages/NotFound'
+
+export const router = createBrowserRouter([
+  { path: '/login', element: <Login /> },
+  { path: '/register', element: <Register /> },
+  { path: '/forgot-password', element: <ForgotPassword /> },
+  {
+    path: '/',
+    element: (
+      <ProtectedRoute>
+        <DashboardLayout />
+      </ProtectedRoute>
+    ),
+    children: [
+      { path: 'admin', element: <AdminDashboard /> },
+      { path: 'calas', element: <CalasDashboard /> },
+      { path: 'calas/biodata', element: <BiodataForm /> },
+      { path: 'calas/documents', element: <DocumentUpload /> },
+      { path: 'calas/timeline', element: <TimelineTracker /> },
+      { path: 'penilai', element: <PenilaiDashboard /> },
+      { path: 'penilai/score/:id', element: <ScoreForm /> },
+      { path: 'penilai/history', element: <ScoreHistory /> },
+      { path: 'korlap', element: <KorlapDashboard /> },
+      { path: 'korlap/rooms', element: <RoomAssignment /> },
+      { path: 'korlap/kanban', element: <KanbanBoard /> },
+      { path: 'pj-ruangan', element: <PJRuanganDashboard /> },
+      { path: 'pj-soal', element: <PJSoalDashboard /> },
+      { path: 'master-data/assistants', element: <AssistantsPage /> },
+      { path: 'master-data/materials', element: <MaterialsPage /> },
+      { path: 'master-data/questions', element: <QuestionsPage /> },
+      { path: 'master-data/question-cards', element: <QuestionCardsPage /> },
+    ],
+  },
+  { path: '*', element: <NotFound /> },
+])
