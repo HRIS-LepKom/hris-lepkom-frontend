@@ -12,6 +12,7 @@ import CalasManagement from '@/pages/admin/CalasManagement'
 import CalasDetail from '@/pages/admin/CalasDetail'
 import CalasDashboard from '@/pages/dashboard/CalasDashboard'
 import PenilaiDashboard from '@/pages/dashboard/PenilaiDashboard'
+import MyAssignments from '@/pages/penilai/MyAssignments'
 import KorlapDashboard from '@/pages/dashboard/KorlapDashboard'
 import PJRuanganDashboard from '@/pages/dashboard/PJRuanganDashboard'
 import PJSoalDashboard from '@/pages/dashboard/PJSoalDashboard'
@@ -67,6 +68,7 @@ export const router = createBrowserRouter([
       { path: 'calas/exam-praktek', element: <ExamUploadPraktek /> },
       { path: 'calas/exam-project', element: <ExamUploadProject /> },
       { path: 'penilai', element: <PenilaiDashboard /> },
+      { path: 'penilai/my-assignments', element: <MyAssignments /> },
       { path: 'penilai/score/:id', element: <ScoreForm /> },
       { path: 'penilai/history', element: <ScoreHistory /> },
       { path: 'korlap', element: <KorlapDashboard /> },
