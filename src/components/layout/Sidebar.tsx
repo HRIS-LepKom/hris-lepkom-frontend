@@ -366,10 +366,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen = false, onClose }) => 
         {/* Header */}
         <div className="bg-lepkom-green text-white px-5 py-5 flex items-center justify-between shadow-sm">
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-lg bg-white/10 flex items-center justify-center font-bold text-white text-base">
-              L
-            </div>
-            <span className="font-bold text-lg tracking-wide">HRIS LepKOM</span>
+            <img src="/assets/images/logo.svg" alt="HRIS LepKOM Logo" className="h-8 w-auto object-contain" />
           </div>
           {onClose && (
             <button
