@@ -17,6 +17,7 @@ export default function Login() {
   const {
     register,
     handleSubmit,
+    setValue,
     formState: { errors },
   } = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
@@ -33,8 +34,16 @@ export default function Login() {
     }
   }
 
+  const handleQuickLogin = async (roleEmail: string) => {
+    setValue('email', roleEmail)
+    setValue('password', '123456')
+    setLoading(true)
+    await login(roleEmail, '123456')
+    setLoading(false)
+  }
+
   return (
-    <div className="min-h-screen bg-page flex items-center justify-center p-4">
+    <div className="min-h-screen bg-page flex items-center justify-center p-4 py-8">
       <div className="bg-white rounded-xl shadow-lg p-8 w-full max-w-md border border-border">
         {/* Header */}
         <div className="text-center mb-6">
@@ -50,6 +59,55 @@ export default function Login() {
           </div>
           <h2 className="text-2xl font-bold text-lepkom-green">HRIS LepKOM</h2>
           <p className="text-sm text-gray-500 mt-1">Sistem Rekrutmen Asisten LEPKOM</p>
+        </div>
+
+        {/* Quick Demo Login Bar */}
+        <div className="mb-6 p-3 bg-page rounded-xl border border-border space-y-2">
+          <p className="text-xs font-bold text-gray-700">⚡ Demo Quick Login (Pilih Role):</p>
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-1.5 text-xs">
+            <button
+              type="button"
+              onClick={() => handleQuickLogin('admin@lepkom.com')}
+              className="px-2 py-1.5 bg-green-50 text-lepkom-green rounded hover:bg-green-100 font-semibold border border-lepkom-green/20"
+            >
+              Super Admin
+            </button>
+            <button
+              type="button"
+              onClick={() => handleQuickLogin('penilai@lepkom.com')}
+              className="px-2 py-1.5 bg-blue-50 text-lepkom-blue rounded hover:bg-blue-100 font-semibold border border-lepkom-blue/20"
+            >
+              Penilai
+            </button>
+            <button
+              type="button"
+              onClick={() => handleQuickLogin('korlap@lepkom.com')}
+              className="px-2 py-1.5 bg-purple-50 text-purple-700 rounded hover:bg-purple-100 font-semibold border border-purple-200"
+            >
+              Korlap
+            </button>
+            <button
+              type="button"
+              onClick={() => handleQuickLogin('pj-ruangan@lepkom.com')}
+              className="px-2 py-1.5 bg-amber-50 text-amber-700 rounded hover:bg-amber-100 font-semibold border border-amber-200"
+            >
+              PJ Ruangan
+            </button>
+            <button
+              type="button"
+              onClick={() => handleQuickLogin('pj-soal@lepkom.com')}
+              className="px-2 py-1.5 bg-orange-50 text-orange-700 rounded hover:bg-orange-100 font-semibold border border-orange-200"
+            >
+              PJ Soal
+            </button>
+            <button
+              type="button"
+              onClick={() => handleQuickLogin('calas@lepkom.com')}
+              className="px-2 py-1.5 bg-gray-100 text-gray-700 rounded hover:bg-gray-200 font-semibold border border-gray-300"
+            >
+              Calas
+            </button>
+          </div>
         </div>
 
         {/* API Error Alert */}
