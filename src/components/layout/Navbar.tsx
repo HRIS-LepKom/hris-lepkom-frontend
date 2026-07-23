@@ -4,10 +4,10 @@ import { useAuth } from '@/hooks/useAuth'
 import { ROLE_LABELS } from '@/utils/constants'
 
 interface NavbarProps {
-  onMenuClick: () => void
+  onMenuClick?: () => void
 }
 
-export const Navbar: React.FC<NavbarProps> = ({ onMenuClick }) => {
+export const Navbar: React.FC<NavbarProps> = () => {
   const { user, logout } = useAuth()
   const [dropdownOpen, setDropdownOpen] = useState(false)
   const dropdownRef = useRef<HTMLDivElement>(null)
@@ -53,16 +53,6 @@ export const Navbar: React.FC<NavbarProps> = ({ onMenuClick }) => {
   return (
     <header className="h-14 bg-white border-b border-border flex items-center justify-between px-4 sm:px-6 sticky top-0 z-30 shadow-xs">
       <div className="flex items-center gap-3">
-        <button
-          type="button"
-          onClick={onMenuClick}
-          className="lg:hidden text-gray-600 hover:text-gray-900 p-1.5 rounded-lg hover:bg-gray-100 focus:outline-none"
-          aria-label="Buka menu navigasi"
-        >
-          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-          </svg>
-        </button>
         <h1 className="text-base sm:text-lg font-semibold text-gray-800">
           {getPageTitle(location.pathname)}
         </h1>
@@ -72,12 +62,12 @@ export const Navbar: React.FC<NavbarProps> = ({ onMenuClick }) => {
         <button
           type="button"
           onClick={() => setDropdownOpen((prev) => !prev)}
-          className="flex items-center gap-2 focus:outline-none p-1 rounded-full hover:bg-gray-100 transition-colors"
+          className="flex items-center gap-2.5 px-3 py-1 rounded-full border border-border/80 bg-page/50 hover:bg-gray-100 transition-all focus:outline-none cursor-pointer"
         >
-          <div className="w-9 h-9 rounded-full bg-lepkom-blue text-white flex items-center justify-center font-bold text-sm shadow-xs">
+          <div className="w-8 h-8 rounded-full bg-lepkom-blue text-white flex items-center justify-center font-bold text-xs shadow-xs">
             {initial}
           </div>
-          <span className="hidden sm:inline-block text-sm font-medium text-gray-700">
+          <span className="hidden sm:inline-block text-sm font-semibold text-gray-800">
             {user?.nama || 'Pengguna'}
           </span>
           <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
