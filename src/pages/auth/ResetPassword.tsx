@@ -1,43 +1,54 @@
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useSearchParams, useNavigate } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { forgotPasswordSchema } from '@/validations/auth.schema'
+import { resetPasswordSchema } from '@/validations/auth.schema'
 import * as authService from '@/services/auth.service'
 import { Button, Input } from '@/components/ui'
 import type { z } from 'zod'
 
-type ForgotPasswordFormValues = z.infer<typeof forgotPasswordSchema>
+type ResetPasswordFormValues = z.infer<typeof resetPasswordSchema>
 
-export default function ForgotPassword() {
-  const [successMessage, setSuccessMessage] = useState<string | null>(null)
+export default function ResetPassword() {
+  const [searchParams] = useSearchParams()
+  const tokenParam = searchParams.get('token') || ''
+  const navigate = useNavigate()
+
   const [apiError, setApiError] = useState<string | null>(null)
+  const [successMessage, setSuccessMessage] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
 
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<ForgotPasswordFormValues>({
-    resolver: zodResolver(forgotPasswordSchema),
+  } = useForm<ResetPasswordFormValues>({
+    resolver: zodResolver(resetPasswordSchema),
+    defaultValues: {
+      token: tokenParam,
+    },
   })
 
-  const onSubmit = async (data: ForgotPasswordFormValues) => {
+  const onSubmit = async (data: ResetPasswordFormValues) => {
     setApiError(null)
     setSuccessMessage(null)
     setLoading(true)
 
     try {
-      const res = await authService.forgotPassword(data.email)
+      const res = await authService.resetPassword(data.token, data.password)
       setLoading(false)
+
       if (res.success) {
-        setSuccessMessage('Link reset password telah dikirim ke email Anda.')
+        setSuccessMessage('Password berhasil diperbarui. Mengalihkan ke login...')
+        setTimeout(() => {
+          navigate('/login')
+        }, 2000)
       } else {
-        setApiError(res.error || 'Gagal mengirim link reset password.')
+        setApiError(res.error || 'Gagal mereset password.')
       }
     } catch (err: any) {
       setLoading(false)
-      setApiError(err.response?.data?.error || err.message || 'Gagal mengirim link reset password.')
+      setApiError(err.response?.data?.error || err.message || 'Gagal mereset password.')
     }
   }
 
@@ -46,13 +57,8 @@ export default function ForgotPassword() {
       <div className="bg-white rounded-xl shadow-lg p-8 w-full max-w-md border border-border">
         {/* Header */}
         <div className="text-center mb-6">
-          <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-lepkom-blue/10 text-lepkom-blue mb-3">
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z" />
-            </svg>
-          </div>
-          <h2 className="text-2xl font-bold text-gray-800">Lupa Password</h2>
-          <p className="text-sm text-gray-500 mt-1">Masukkan email terdaftar Anda untuk reset password</p>
+          <h2 className="text-2xl font-bold text-gray-800">Reset Password</h2>
+          <p className="text-sm text-gray-500 mt-1">Masukkan password baru untuk akun Anda</p>
         </div>
 
         {/* API Error Alert */}
@@ -77,23 +83,42 @@ export default function ForgotPassword() {
 
         {/* Form */}
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+          {!tokenParam && (
+            <Input
+              label="Token Reset"
+              placeholder="Masukkan token reset password"
+              error={errors.token?.message}
+              required
+              {...register('token')}
+            />
+          )}
+
           <Input
-            label="Email"
-            type="email"
-            placeholder="nama@domain.com"
-            error={errors.email?.message}
+            label="Password Baru"
+            type="password"
+            placeholder="••••••••"
+            error={errors.password?.message}
             required
-            {...register('email')}
+            {...register('password')}
+          />
+
+          <Input
+            label="Konfirmasi Password Baru"
+            type="password"
+            placeholder="••••••••"
+            error={errors.confirmPassword?.message}
+            required
+            {...register('confirmPassword')}
           />
 
           <Button type="submit" variant="primary" loading={loading} className="w-full py-2.5">
-            Kirim Link Reset
+            Reset Password
           </Button>
         </form>
 
         {/* Footer */}
         <div className="mt-6 text-center text-sm text-gray-600 border-t border-border pt-4">
-          Kembai ke{' '}
+          Kembali ke{' '}
           <Link to="/login" className="text-lepkom-green font-semibold hover:underline">
             Halaman Masuk
           </Link>

@@ -4,6 +4,8 @@ import DashboardLayout from '@/components/layout/DashboardLayout'
 import Login from '@/pages/auth/Login'
 import Register from '@/pages/auth/Register'
 import ForgotPassword from '@/pages/auth/ForgotPassword'
+import ResetPassword from '@/pages/auth/ResetPassword'
+import ForceChangePassword from '@/pages/auth/ForceChangePassword'
 import AdminDashboard from '@/pages/dashboard/AdminDashboard'
 import CalasDashboard from '@/pages/dashboard/CalasDashboard'
 import PenilaiDashboard from '@/pages/dashboard/PenilaiDashboard'
@@ -27,6 +29,15 @@ export const router = createBrowserRouter([
   { path: '/login', element: <Login /> },
   { path: '/register', element: <Register /> },
   { path: '/forgot-password', element: <ForgotPassword /> },
+  { path: '/reset-password', element: <ResetPassword /> },
+  {
+    path: '/force-change-password',
+    element: (
+      <ProtectedRoute>
+        <ForceChangePassword />
+      </ProtectedRoute>
+    ),
+  },
   {
     path: '/',
     element: (
