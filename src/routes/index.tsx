@@ -23,7 +23,10 @@ import ExamUploadPraktek from '@/pages/candidates/ExamUploadPraktek'
 import ExamUploadProject from '@/pages/candidates/ExamUploadProject'
 import ScoreForm from '@/pages/evaluations/ScoreForm'
 import ScoreHistory from '@/pages/evaluations/ScoreHistory'
+import SessionList from '@/pages/scheduling/SessionList'
+import SessionForm from '@/pages/scheduling/SessionForm'
 import RoomAssignment from '@/pages/scheduling/RoomAssignment'
+import RoomPlacement from '@/pages/scheduling/RoomPlacement'
 import KanbanBoard from '@/pages/scheduling/KanbanBoard'
 import AssistantsPage from '@/pages/master-data/AssistantsPage'
 import MaterialsPage from '@/pages/master-data/MaterialsPage'
@@ -69,6 +72,9 @@ export const router = createBrowserRouter([
       { path: 'korlap', element: <KorlapDashboard /> },
       { path: 'korlap/rooms', element: <RoomAssignment /> },
       { path: 'korlap/kanban', element: <KanbanBoard /> },
+      { path: 'scheduling/session-list', element: <SessionList /> },
+      { path: 'scheduling/session-create', element: <SessionForm /> },
+      { path: 'scheduling/room-placement', element: <RoomPlacement /> },
       { path: 'pj-ruangan', element: <PJRuanganDashboard /> },
       { path: 'pj-soal', element: <PJSoalDashboard /> },
       { path: 'master-data/assistants', element: <AssistantsPage /> },
