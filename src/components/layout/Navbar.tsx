@@ -4,10 +4,10 @@ import { useAuth } from '@/hooks/useAuth'
 import { ROLE_LABELS } from '@/utils/constants'
 
 interface NavbarProps {
-  onMenuClick?: () => void
+  onMenuClick: () => void
 }
 
-export const Navbar: React.FC<NavbarProps> = () => {
+export const Navbar: React.FC<NavbarProps> = ({ onMenuClick }) => {
   const { user, logout } = useAuth()
   const [dropdownOpen, setDropdownOpen] = useState(false)
   const dropdownRef = useRef<HTMLDivElement>(null)
@@ -53,6 +53,16 @@ export const Navbar: React.FC<NavbarProps> = () => {
   return (
     <header className="h-14 bg-white border-b border-border flex items-center justify-between px-4 sm:px-6 sticky top-0 z-30 shadow-xs">
       <div className="flex items-center gap-3">
+        <button
+          type="button"
+          onClick={onMenuClick}
+          className="lg:hidden text-gray-600 hover:text-gray-900 p-1.5 rounded-lg hover:bg-gray-100 focus:outline-none"
+          aria-label="Buka menu navigasi"
+        >
+          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+        </button>
         <h1 className="text-base sm:text-lg font-semibold text-gray-800">
           {getPageTitle(location.pathname)}
         </h1>
@@ -62,25 +72,25 @@ export const Navbar: React.FC<NavbarProps> = () => {
         <button
           type="button"
           onClick={() => setDropdownOpen((prev) => !prev)}
-          className="flex items-center gap-2 sm:gap-2.5 p-1 sm:px-3 sm:py-1.5 rounded-full border border-border bg-white hover:bg-gray-50 transition-all focus:outline-none cursor-pointer shadow-2xs"
+          className="flex items-center gap-2 focus:outline-none p-1 rounded-full hover:bg-gray-100 transition-colors"
         >
-          <div className="w-8 h-8 shrink-0 rounded-full bg-lepkom-blue text-white flex items-center justify-center font-bold text-xs shadow-xs">
+          <div className="w-9 h-9 rounded-full bg-lepkom-blue text-white flex items-center justify-center font-bold text-sm shadow-xs">
             {initial}
           </div>
-          <span className="hidden sm:inline-block text-sm font-semibold text-gray-800">
+          <span className="hidden sm:inline-block text-sm font-medium text-gray-700">
             {user?.nama || 'Pengguna'}
           </span>
-          <svg className="w-4 h-4 text-gray-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
           </svg>
         </button>
 
         {dropdownOpen && (
-          <div className="absolute right-0 top-full mt-2 w-52 bg-white rounded-xl shadow-xl border border-border py-1 z-50 animate-in fade-in duration-150">
-            <div className="px-4 py-2.5 border-b border-border">
-              <p className="text-sm font-bold text-gray-900 truncate">{user?.nama || 'User'}</p>
-              <p className="text-xs text-gray-500 truncate">{user?.email || '-'}</p>
-              <p className="text-xs font-semibold text-lepkom-green mt-1">
+          <div className="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-lg border border-border py-1 z-50 animate-in fade-in duration-150">
+            <div className="px-4 py-2 border-b border-border">
+              <p className="text-sm font-semibold text-gray-900 truncate">{user?.nama}</p>
+              <p className="text-xs text-gray-500 truncate">{user?.email}</p>
+              <p className="text-xs font-medium text-lepkom-green mt-0.5">
                 {user?.role ? ROLE_LABELS[user.role] : ''}
               </p>
             </div>
@@ -89,7 +99,7 @@ export const Navbar: React.FC<NavbarProps> = () => {
                 setDropdownOpen(false)
                 logout()
               }}
-              className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 flex items-center gap-2 transition-colors font-medium cursor-pointer"
+              className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 flex items-center gap-2 transition-colors"
             >
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path
