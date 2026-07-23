@@ -364,14 +364,14 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen = false, onClose }) => 
         }`}
       >
         {/* Header */}
-        <div className="bg-lepkom-green text-white px-5 py-5 flex items-center justify-between shadow-sm">
+        <div className="bg-white border-b border-border px-5 py-3.5 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <img src="/assets/images/logo.svg" alt="HRIS LepKOM Logo" className="h-8 w-auto object-contain" />
           </div>
           {onClose && (
             <button
               onClick={onClose}
-              className="lg:hidden text-white/80 hover:text-white p-1 focus:outline-none"
+              className="lg:hidden text-gray-500 hover:text-gray-800 p-1 focus:outline-none"
             >
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
