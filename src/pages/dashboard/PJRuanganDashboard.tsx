@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom'
 import { Card, Button, Badge } from '@/components/ui'
 import { useAuth } from '@/hooks/useAuth'
-import { CalasClassChartWidget } from '@/components/dashboard/CalasClassChartWidget'
+import { CalasClassChartCard, CalasClassTableCard } from '@/components/dashboard/CalasClassChartWidget'
 
 export default function PJRuanganDashboard() {
   const navigate = useNavigate()
@@ -31,24 +31,7 @@ export default function PJRuanganDashboard() {
         </Button>
       </div>
 
-      {/* Assigned Room Overview Card */}
-      <Card header="Status Penugasan Ruangan Anda">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 py-2">
-          <div>
-            <span className="text-xs text-gray-500 font-semibold uppercase tracking-wider">Ruangan Ditugaskan:</span>
-            <h2 className="text-2xl font-extrabold text-gray-900 mt-1">Ruangan 121 (Lab Komputer)</h2>
-            <p className="text-xs text-gray-500 mt-1">Sesi: Ujian Praktek — 09:00 WIB</p>
-          </div>
-          <Badge variant="status-green" className="text-sm px-3 py-1 self-start sm:self-center">
-            Ruangan Siap
-          </Badge>
-        </div>
-      </Card>
-
-      {/* ─── STATISTIK UTAMA: CALAS PER KELAS KULIAH (CHART -> TABEL -> STATUS CARD) ─── */}
-      <CalasClassChartWidget />
-
-      {/* PJ Task Shortcuts */}
+      {/* ─── 1. PINTASAN AKSI ────────────────────────────────────────────────── */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
         <Card header="Koreksi & Presensi Ruangan">
           <div className="space-y-3">
@@ -80,6 +63,26 @@ export default function PJRuanganDashboard() {
           </div>
         </Card>
       </div>
+
+      {/* ─── 2. STATCARD (ROLE METRICS) ───────────────────────────────────────── */}
+      <Card header="Status Penugasan Ruangan Anda">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 py-2">
+          <div>
+            <span className="text-xs text-gray-500 font-semibold uppercase tracking-wider">Ruangan Ditugaskan:</span>
+            <h2 className="text-2xl font-extrabold text-gray-900 mt-1">Ruangan 121 (Lab Komputer)</h2>
+            <p className="text-xs text-gray-500 mt-1">Sesi: Ujian Praktek — 09:00 WIB</p>
+          </div>
+          <Badge variant="status-green" className="text-sm px-3 py-1 self-start sm:self-center">
+            Ruangan Siap
+          </Badge>
+        </div>
+      </Card>
+
+      {/* ─── 3. CHART ─────────────────────────────────────────────────────────── */}
+      <CalasClassChartCard />
+
+      {/* ─── 4. TABEL ─────────────────────────────────────────────────────────── */}
+      <CalasClassTableCard />
     </div>
   )
 }
