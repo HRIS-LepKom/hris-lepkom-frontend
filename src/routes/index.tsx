@@ -8,6 +8,8 @@ import ResetPassword from '@/pages/auth/ResetPassword'
 import ForceChangePassword from '@/pages/auth/ForceChangePassword'
 import AdminDashboard from '@/pages/dashboard/AdminDashboard'
 import RecruitmentToggle from '@/pages/admin/RecruitmentToggle'
+import CalasManagement from '@/pages/admin/CalasManagement'
+import CalasDetail from '@/pages/admin/CalasDetail'
 import CalasDashboard from '@/pages/dashboard/CalasDashboard'
 import PenilaiDashboard from '@/pages/dashboard/PenilaiDashboard'
 import KorlapDashboard from '@/pages/dashboard/KorlapDashboard'
@@ -49,6 +51,8 @@ export const router = createBrowserRouter([
     children: [
       { path: 'admin', element: <AdminDashboard /> },
       { path: 'admin/recruitment-toggle', element: <RecruitmentToggle /> },
+      { path: 'admin/calas-management', element: <CalasManagement /> },
+      { path: 'admin/calas/:id', element: <CalasDetail /> },
       { path: 'calas', element: <CalasDashboard /> },
       { path: 'calas/biodata', element: <BiodataForm /> },
       { path: 'calas/documents', element: <DocumentUpload /> },
