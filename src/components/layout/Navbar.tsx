@@ -1,118 +1,55 @@
-import React, { useState, useRef, useEffect } from 'react'
-import { useLocation } from 'react-router-dom'
-import { useAuth } from '@/hooks/useAuth'
-import { ROLE_LABELS } from '@/utils/constants'
+import { useSidebar } from '@/context/SidebarContext'
+import { useAuthStore } from '@/stores/auth.store'
 
-interface NavbarProps {
-  onMenuClick: () => void
-}
+export default function Navbar() {
+  const { isMobileOpen, toggleSidebar, toggleMobileSidebar } = useSidebar()
+  const user = useAuthStore((s) => s.user)
+  const logout = useAuthStore((s) => s.logout)
 
-export const Navbar: React.FC<NavbarProps> = ({ onMenuClick }) => {
-  const { user, logout } = useAuth()
-  const [dropdownOpen, setDropdownOpen] = useState(false)
-  const dropdownRef = useRef<HTMLDivElement>(null)
-  const location = useLocation()
-
-  // Close dropdown on click outside
-  useEffect(() => {
-    const handleClickOutside = (e: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
-        setDropdownOpen(false)
-      }
+  const handleToggle = () => {
+    if (window.innerWidth >= 1024) {
+      toggleSidebar()
+    } else {
+      toggleMobileSidebar()
     }
-    document.addEventListener('mousedown', handleClickOutside)
-    return () => document.removeEventListener('mousedown', handleClickOutside)
-  }, [])
-
-  // Dynamic title based on pathname
-  const getPageTitle = (pathname: string) => {
-    if (pathname.includes('/admin/recruitment-toggle')) return 'Toggle Rekrutmen'
-    if (pathname.includes('/admin/calas-management')) return 'Manajemen Calas'
-    if (pathname.includes('/admin')) return 'Dashboard Admin'
-    if (pathname.includes('/master-data/assistants')) return 'Master Data Asisten'
-    if (pathname.includes('/master-data/materials')) return 'Master Data Materi'
-    if (pathname.includes('/master-data/questions')) return 'Master Data Soal'
-    if (pathname.includes('/master-data/question-cards')) return 'Question Cards'
-    if (pathname.includes('/calas/biodata')) return 'Biodata Calas'
-    if (pathname.includes('/calas/documents')) return 'Unggah Dokumen'
-    if (pathname.includes('/calas/timeline')) return 'Timeline Rekrutmen'
-    if (pathname.includes('/calas')) return 'Dashboard Calas'
-    if (pathname.includes('/penilai/my-assignments')) return 'Tugas Penilaian'
-    if (pathname.includes('/penilai/history')) return 'Riwayat Penilaian'
-    if (pathname.includes('/penilai')) return 'Dashboard Penilai'
-    if (pathname.includes('/korlap/rooms')) return 'Penugasan Ruangan'
-    if (pathname.includes('/korlap/kanban')) return 'Kanban Board'
-    if (pathname.includes('/korlap')) return 'Dashboard Korlap'
-    if (pathname.includes('/pj-ruangan')) return 'Dashboard PJ Ruangan'
-    if (pathname.includes('/pj-soal')) return 'Dashboard PJ Soal'
-    return 'HRIS LepKOM'
   }
 
-  const initial = user?.nama ? user.nama.charAt(0).toUpperCase() : 'U'
+  const initials = user?.nama ? user.nama.split(' ').map((w: string) => w[0]).join('').toUpperCase().slice(0, 2) : 'U'
 
   return (
-    <header className="h-14 bg-white border-b border-border flex items-center justify-between px-4 sm:px-6 sticky top-0 z-30 shadow-xs">
-      <div className="flex items-center gap-3">
-        <button
-          type="button"
-          onClick={onMenuClick}
-          className="lg:hidden text-gray-600 hover:text-gray-900 p-1.5 rounded-lg hover:bg-gray-100 focus:outline-none"
-          aria-label="Buka menu navigasi"
-        >
-          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-          </svg>
-        </button>
-        <h1 className="text-base sm:text-lg font-semibold text-gray-800">
-          {getPageTitle(location.pathname)}
-        </h1>
-      </div>
+    <header className="sticky top-0 flex w-full bg-white border-b border-gray-200 z-50">
+      <div className="flex items-center justify-between w-full px-3 py-3 sm:px-6 sm:py-4">
+        <div className="flex items-center gap-3">
+          <button
+            onClick={handleToggle}
+            className="flex items-center justify-center w-10 h-10 text-gray-500 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
+            aria-label="Toggle Sidebar"
+          >
+            {isMobileOpen ? (
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" /></svg>
+            ) : (
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="3" y1="6" x2="21" y2="6" /><line x1="3" y1="12" x2="21" y2="12" /><line x1="3" y1="18" x2="21" y2="18" /></svg>
+            )}
+          </button>
+        </div>
 
-      <div className="relative" ref={dropdownRef}>
-        <button
-          type="button"
-          onClick={() => setDropdownOpen((prev) => !prev)}
-          className="flex items-center gap-2 focus:outline-none p-1 rounded-full hover:bg-gray-100 transition-colors"
-        >
-          <div className="w-9 h-9 rounded-full bg-lepkom-blue text-white flex items-center justify-center font-bold text-sm shadow-xs">
-            {initial}
-          </div>
-          <span className="hidden sm:inline-block text-sm font-medium text-gray-700">
-            {user?.nama || 'Pengguna'}
-          </span>
-          <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-          </svg>
-        </button>
-
-        {dropdownOpen && (
-          <div className="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-lg border border-border py-1 z-50 animate-in fade-in duration-150">
-            <div className="px-4 py-2 border-b border-border">
-              <p className="text-sm font-semibold text-gray-900 truncate">{user?.nama}</p>
-              <p className="text-xs text-gray-500 truncate">{user?.email}</p>
-              <p className="text-xs font-medium text-lepkom-green mt-0.5">
-                {user?.role ? ROLE_LABELS[user.role] : ''}
-              </p>
+        <div className="relative group">
+          <button className="flex items-center gap-2 cursor-pointer">
+            <div className="w-9 h-9 rounded-full bg-lepkom-blue text-white flex items-center justify-center font-bold text-sm shadow-sm">
+              {initials}
             </div>
-            <button
-              onClick={() => {
-                setDropdownOpen(false)
-                logout()
-              }}
-              className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 flex items-center gap-2 transition-colors"
-            >
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
-                />
-              </svg>
+            <div className="hidden sm:block text-left">
+              <p className="text-sm font-medium text-gray-700">{user?.nama}</p>
+              <p className="text-xs text-gray-500 capitalize">{user?.role?.replace(/_/g, ' ')}</p>
+            </div>
+          </button>
+          <div className="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-xl shadow-lg py-1 hidden group-hover:block z-50">
+            <button onClick={logout} className="w-full flex items-center gap-2 px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" /><polyline points="16 17 21 12 16 7" /><line x1="21" y1="12" x2="9" y2="12" /></svg>
               Keluar
             </button>
           </div>
-        )}
+        </div>
       </div>
     </header>
   )

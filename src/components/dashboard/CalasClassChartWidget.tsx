@@ -74,26 +74,57 @@ export const CalasClassChartWidget: React.FC = () => {
 
   return (
     <div className="space-y-6">
-      {/* ─── URUTAN 1: CHART STATISTIK ────────────────────────────────────────── */}
+      {/* ─── 1. STATCARD (METRIK SUMMARY) ─────────────────────────────────────── */}
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <Card className="bg-green-50/50 border-green-200">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Total Pendaftar Calas</p>
+              <p className="text-2xl font-extrabold text-lepkom-green mt-1">{totalCalasSum} Calas</p>
+              <p className="text-xs text-gray-600 mt-0.5">Dari {MOCK_CLASS_STATS.length} Kelompok Kelas</p>
+            </div>
+            <span className="text-2xl">👥</span>
+          </div>
+        </Card>
+
+        <Card className="bg-blue-50/50 border-blue-200">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Kelas Paling Dominan</p>
+              <p className="text-2xl font-extrabold text-lepkom-blue mt-1">1IA20</p>
+              <p className="text-xs text-gray-600 mt-0.5">34 Calas (26.5%)</p>
+            </div>
+            <span className="text-2xl">🏆</span>
+          </div>
+        </Card>
+
+        <Card className="bg-amber-50/50 border-amber-200">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Rata-Rata per Kelas</p>
+              <p className="text-2xl font-extrabold text-amber-600 mt-1">18.3 Calas</p>
+              <p className="text-xs text-gray-600 mt-0.5">Distribusi Pendaftaran</p>
+            </div>
+            <span className="text-2xl">📈</span>
+          </div>
+        </Card>
+      </div>
+
+      {/* ─── 2. CHART STATISTIK ────────────────────────────────────────── */}
       <Card
         header={
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-            <div>
-              <h2 className="text-lg font-bold text-gray-900 flex items-center gap-2">
-                <span>📊</span> Statistik Distribusi Calas per Kelas Kuliah
-              </h2>
-              <p className="text-xs text-gray-500 mt-0.5">
-                Visualisasi proporsi jumlah pendaftar calon asisten berdasarkan kelompok kode kelas.
-              </p>
-            </div>
-            <Badge variant="role" className="self-start sm:self-center">
-              Total {totalCalasSum} Calas
-            </Badge>
+          <div>
+            <h2 className="text-lg font-bold text-gray-900 flex items-center gap-2">
+              <span>📊</span> Statistik Distribusi Calas per Kelas Kuliah
+            </h2>
+            <p className="text-xs text-gray-500 mt-0.5">
+              Visualisasi proporsi jumlah pendaftar calon asisten berdasarkan kelompok kode kelas.
+            </p>
           </div>
         }
       >
         <div className="py-2 space-y-4">
-          {/* Persistent Fixed-Height Header Info Bar (No Layout Shift) */}
+          {/* Header Info Bar */}
           <div className="h-10 px-4 py-2 bg-gray-900 text-white rounded-lg text-xs flex items-center justify-between shadow-xs transition-colors">
             {hoveredClass ? (
               <>
@@ -108,12 +139,12 @@ export const CalasClassChartWidget: React.FC = () => {
             ) : (
               <div className="flex items-center gap-2 text-gray-400 italic">
                 <span>💡</span>
-                <span>Arahkan kursor pada batang chart untuk melihat rincian jurusan dan proporsi.</span>
+                <span>Arahkan kursor atau fokuskan pada batang chart untuk melihat rincian jurusan dan proporsi.</span>
               </div>
             )}
           </div>
 
-          {/* Custom Animated SVG Bar Chart Container */}
+          {/* SVG Bar Chart Container */}
           <div className="relative pt-6 pb-2 px-2 bg-page/60 rounded-xl border border-border">
             {/* Chart Grid Lines */}
             <div className="absolute inset-0 px-4 py-6 flex flex-col justify-between pointer-events-none opacity-30">
@@ -131,9 +162,15 @@ export const CalasClassChartWidget: React.FC = () => {
                 return (
                   <div
                     key={item.kodeKelas}
+                    role="button"
+                    tabIndex={0}
+                    aria-label={`Kelas ${item.kodeKelas}: ${item.totalCalas} Calas (${item.persentase}%)`}
+                    aria-expanded={isHovered}
                     onMouseEnter={() => setHoveredClass(item)}
                     onMouseLeave={() => setHoveredClass(null)}
-                    className="flex-1 flex flex-col items-center h-full justify-end group cursor-pointer relative"
+                    onFocus={() => setHoveredClass(item)}
+                    onBlur={() => setHoveredClass(null)}
+                    className="flex-1 flex flex-col items-center h-full justify-end group cursor-pointer relative rounded-lg focus:outline-none focus:ring-2 focus:ring-lepkom-blue/50 focus:ring-offset-1"
                   >
                     {/* Floating Mini Tooltip Badge above bar */}
                     {isHovered && (
@@ -164,46 +201,10 @@ export const CalasClassChartWidget: React.FC = () => {
         </div>
       </Card>
 
-      {/* ─── URUTAN 2: TABEL DATA RINCIAN ──────────────────────────────────────── */}
+      {/* ─── 3. TABEL DATA RINCIAN ──────────────────────────────────────── */}
       <Card header="📋 Breakdown Rincian Pendaftar per Kelas">
         <DataTable columns={tableColumns} data={MOCK_CLASS_STATS} emptyMessage="Data kelas belum tersedia" />
       </Card>
-
-      {/* ─── URUTAN 3: STATUS CARD METRIK SUMMARY ─────────────────────────────── */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <Card className="bg-green-50/50 border-green-200">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Kelas Paling Dominan</p>
-              <p className="text-2xl font-extrabold text-lepkom-green mt-1">1IA20</p>
-              <p className="text-xs text-gray-600 mt-0.5">34 Calas Pendaftar</p>
-            </div>
-            <span className="text-2xl">🏆</span>
-          </div>
-        </Card>
-
-        <Card className="bg-blue-50/50 border-blue-200">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Total Kelompok Kelas</p>
-              <p className="text-2xl font-extrabold text-lepkom-blue mt-1">7 Kelas</p>
-              <p className="text-xs text-gray-600 mt-0.5">Tingkat 1 - 4 Gunadarma</p>
-            </div>
-            <span className="text-2xl">🏫</span>
-          </div>
-        </Card>
-
-        <Card className="bg-amber-50/50 border-amber-200">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Rata-Rata per Kelas</p>
-              <p className="text-2xl font-extrabold text-amber-600 mt-1">18.3 Calas</p>
-              <p className="text-xs text-gray-600 mt-0.5">Distribusi Pendaftaran</p>
-            </div>
-            <span className="text-2xl">📈</span>
-          </div>
-        </Card>
-      </div>
     </div>
   )
 }
