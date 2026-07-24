@@ -29,7 +29,7 @@ export default function RoomAssignment() {
           setSessionId(list[0]._id)
         }
       }
-    } catch (err) {
+    } catch {
       // Fallback
     }
   }
@@ -53,7 +53,7 @@ export default function RoomAssignment() {
         })
         setPjAssignments(map)
       }
-    } catch (err) {
+    } catch {
       // Fallback empty state
     } finally {
       setLoading(false)
@@ -75,6 +75,10 @@ export default function RoomAssignment() {
 
   const handlePjChange = (ruangan: Ruangan, pjId: string) => {
     setPjAssignments((prev) => ({ ...prev, [ruangan]: pjId }))
+  }
+
+  const handleResetPj = (ruangan: Ruangan) => {
+    setPjAssignments((prev) => ({ ...prev, [ruangan]: '' }))
   }
 
   const handleSaveAll = async () => {
@@ -226,8 +230,18 @@ export default function RoomAssignment() {
                 />
 
                 {currentPjUser && (
-                  <div className="p-3 bg-page rounded-lg border border-border text-xs space-y-1">
-                    <p className="font-bold text-gray-800">{currentPjUser.nama}</p>
+                  <div className="p-3 bg-page rounded-lg border border-border text-xs space-y-2">
+                    <div className="flex items-center justify-between">
+                      <p className="font-bold text-gray-800">{currentPjUser.nama}</p>
+                      <Button
+                        variant="danger"
+                        size="sm"
+                        className="py-0.5 px-2 text-[11px]"
+                        onClick={() => handleResetPj(ruangan)}
+                      >
+                        Reset PJ
+                      </Button>
+                    </div>
                     <p className="text-gray-500">NPM: {currentPjUser.npm} | Email: {currentPjUser.email}</p>
                   </div>
                 )}

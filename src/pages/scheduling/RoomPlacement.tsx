@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback, useMemo } from 'react'
 import { useSearchParams, useNavigate } from 'react-router-dom'
-import { Button, Card, Badge, Skeleton, Select } from '@/components/ui'
+import { Button, Card, Badge, Skeleton, Select, Modal } from '@/components/ui'
 import { RUANGAN_LIST, type Ruangan, type User, type Calas, type ExamSession, type RoomPlacement as RoomPlacementType } from '@/types'
 import { formatDateFull } from '@/utils/format'
 import * as schedulingService from '@/services/scheduling.service'
@@ -23,6 +23,8 @@ export default function RoomPlacement() {
 
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
+  const [resetting, setResetting] = useState(false)
+  const [showResetModal, setShowResetModal] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [success, setSuccess] = useState<string | null>(null)
 
@@ -36,7 +38,7 @@ export default function RoomPlacement() {
           setSessionId(list[0]._id)
         }
       }
-    } catch (err) {
+    } catch {
       // Fallback
     }
   }
@@ -69,7 +71,7 @@ export default function RoomPlacement() {
           setSelectedPenilaiIds([])
         }
       }
-    } catch (err) {
+    } catch {
       // Fallback empty
     } finally {
       setLoading(false)
@@ -128,6 +130,29 @@ export default function RoomPlacement() {
     )
   }
 
+  const handleResetPlacement = async () => {
+    setResetting(true)
+    setError(null)
+    setSuccess(null)
+    try {
+      setSelectedCalasIds([])
+      setSelectedPenilaiIds([])
+      await schedulingService.setRoomPlacement({
+        examSessionRef: sessionId,
+        ruangan: selectedRuangan,
+        calasList: [],
+        penilaiList: [],
+      })
+      setShowResetModal(false)
+      setSuccess(`Placement untuk Ruangan ${selectedRuangan} telah di-reset (dikosongkan).`)
+      fetchData()
+    } catch {
+      alert('Gagal me-reset placement ruangan.')
+    } finally {
+      setResetting(false)
+    }
+  }
+
   const handleSave = async () => {
     if (!sessionId) {
       setError('Silakan pilih sesi ujian dari daftar sesi.')
@@ -160,7 +185,7 @@ export default function RoomPlacement() {
       } else {
         setSuccess(`Placement untuk Ruangan ${selectedRuangan} berhasil disimpan!`)
       }
-    } catch (err: any) {
+    } catch {
       setSuccess(`Placement untuk Ruangan ${selectedRuangan} berhasil disimpan!`)
     } finally {
       setSaving(false)
@@ -193,11 +218,14 @@ export default function RoomPlacement() {
             Pembagian peserta ujian (calas) dan asisten penilai per ruangan dengan proteksi duplikasi.
           </p>
         </div>
-        <div className="flex items-center gap-3">
-          <Button variant="secondary" onClick={() => navigate('/korlap/kanban')}>
-            Lihat Kanban Board
+        <div className="flex items-center gap-2">
+          <Button variant="danger" size="sm" onClick={() => setShowResetModal(true)}>
+            Reset Room
           </Button>
-          <Button variant="primary" onClick={handleSave} loading={saving}>
+          <Button variant="secondary" size="sm" onClick={() => navigate('/korlap/kanban')}>
+            Kanban Board
+          </Button>
+          <Button variant="primary" size="sm" onClick={handleSave} loading={saving}>
             Simpan Placement
           </Button>
         </div>
@@ -376,6 +404,29 @@ export default function RoomPlacement() {
           </div>
         </Card>
       </div>
+
+      {/* Reset Confirmation Modal */}
+      <Modal
+        isOpen={showResetModal}
+        onClose={() => setShowResetModal(false)}
+        title="Reset Placement Ruangan"
+      >
+        <div className="space-y-4">
+          <p className="text-sm text-gray-600">
+            Apakah Anda yakin ingin me-reset (dikosongkan) seluruh calas dan penilai di Ruangan{' '}
+            <span className="font-bold text-gray-900">{selectedRuangan}</span>?
+          </p>
+
+          <div className="flex justify-end gap-2 pt-2 border-t border-border">
+            <Button variant="secondary" onClick={() => setShowResetModal(false)} disabled={resetting}>
+              Batal
+            </Button>
+            <Button variant="danger" onClick={handleResetPlacement} loading={resetting}>
+              Reset Placement
+            </Button>
+          </div>
+        </div>
+      </Modal>
     </div>
   )
 }
