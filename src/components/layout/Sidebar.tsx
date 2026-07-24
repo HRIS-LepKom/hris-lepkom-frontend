@@ -1,272 +1,339 @@
-import { useCallback, useEffect, useRef, useState } from 'react'
-import { Link, useLocation } from 'react-router-dom'
+import { NavLink } from 'react-router-dom'
+import { useAuth } from '@/hooks/useAuth'
+import { ROLE_LABELS } from '@/utils/constants'
+import { Badge } from '@/components/ui/Badge'
 import { useSidebar } from '@/context/SidebarContext'
-import { useAuthStore } from '@/stores/auth.store'
+import type { Role } from '@/types'
 
-type NavItem = {
-  name: string
+interface NavItem {
+  label: string
+  to: string
   icon: React.ReactNode
-  path?: string
-  subItems?: { name: string; path: string }[]
 }
 
-function getNavItems(role: string): { main: NavItem[]; others: NavItem[] } {
-  const isSuper = role === 'super_admin'
-  const isPjSoal = role === 'pj_soal_materi'
-  const isKorlap = role === 'koordinator_lapangan'
-  const isPjRuang = role === 'penanggung_jawab_ruangan'
-  const isPenilai = role === 'asisten_penilai'
-  const isCalas = role === 'asisten' || role === 'staff'
+const getNavItems = (userRole: Role): NavItem[] => {
+  switch (userRole) {
+    case 'super_admin':
+      return [
+        {
+          label: 'Dashboard',
+          to: '/admin',
+          icon: (
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+            </svg>
+          ),
+        },
+        {
+          label: 'Toggle Rekrutmen',
+          to: '/admin/recruitment-toggle',
+          icon: (
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
+            </svg>
+          ),
+        },
+        {
+          label: 'Master Asisten',
+          to: '/master-data/assistants',
+          icon: (
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+            </svg>
+          ),
+        },
+        {
+          label: 'Master Calas',
+          to: '/admin/calas-management',
+          icon: (
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+            </svg>
+          ),
+        },
+        {
+          label: 'Materi & Soal',
+          to: '/master-data/materials',
+          icon: (
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+            </svg>
+          ),
+        },
+        {
+          label: 'Penjadwalan',
+          to: '/scheduling/session-list',
+          icon: (
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+            </svg>
+          ),
+        },
+      ]
 
-  const main: NavItem[] = [
-    ...(isSuper || isPjSoal || isKorlap || isPjRuang || isPenilai || isCalas
-      ? [
-          {
-            name: 'Dashboard',
-            icon: <GridSvg />,
-            path: isSuper
-              ? '/admin'
-              : isPjSoal
-                ? '/pj-soal'
-                : isKorlap
-                  ? '/korlap'
-                  : isPjRuang
-                    ? '/pj-ruangan'
-                    : isPenilai
-                      ? '/penilai'
-                      : '/calas',
-          },
-        ]
-      : []),
-    ...(isCalas
-      ? [
-          { name: 'Biodata', icon: <UserSvg />, path: '/calas/biodata' },
-          { name: 'Dokumen', icon: <FolderSvg />, path: '/calas/documents' },
-          { name: 'Timeline', icon: <ListSvg />, path: '/calas/timeline' },
-        ]
-      : []),
-    ...(isSuper || isKorlap
-      ? [
-          {
-            name: 'Penjadwalan',
-            icon: <CalenderSvg />,
-            subItems: [
-              ...(isSuper || isKorlap
-                ? [
-                    { name: 'Sesi Ujian', path: isSuper ? '/admin' : '/korlap/rooms' },
-                    { name: 'Kanban Board', path: '/korlap/kanban' },
-                  ]
-                : []),
-            ],
-          },
-        ]
-      : []),
-  ]
+    case 'pj_soal_materi':
+      return [
+        {
+          label: 'Dashboard',
+          to: '/pj-soal',
+          icon: (
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+            </svg>
+          ),
+        },
+        {
+          label: 'Materi & Soal',
+          to: '/master-data/materials',
+          icon: (
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+            </svg>
+          ),
+        },
+        {
+          label: 'Question Card',
+          to: '/master-data/question-cards',
+          icon: (
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+            </svg>
+          ),
+        },
+      ]
 
-  const others: NavItem[] = [
-    ...(isSuper
-      ? [
-          {
-            name: 'Master Data',
-            icon: <BoxCubeSvg />,
-            subItems: [
-              { name: 'Asisten', path: '/master-data/assistants' },
-              { name: 'Calon Asisten', path: '/admin' },
-              { name: 'Materi', path: '/master-data/materials' },
-              { name: 'Soal', path: '/master-data/questions' },
-              { name: 'Question Card', path: '/master-data/question-cards' },
-            ],
-          },
-        ]
-      : []),
-    ...(isPjSoal
-      ? [
-          {
-            name: 'Master Data',
-            icon: <BoxCubeSvg />,
-            subItems: [
-              { name: 'Materi', path: '/master-data/materials' },
-              { name: 'Soal', path: '/master-data/questions' },
-              { name: 'Question Card', path: '/master-data/question-cards' },
-            ],
-          },
-        ]
-      : []),
-    ...(isPenilai
-      ? [
-          {
-            name: 'Penilaian',
-            icon: <PencilSvg />,
-            subItems: [
-              { name: 'Daftar Tugas', path: '/penilai' },
-              { name: 'Riwayat', path: '/penilai/history' },
-            ],
-          },
-        ]
-      : []),
-    ...(isSuper
-      ? [{ name: 'Toggle Rekrutmen', icon: <PlugInSvg />, path: '/admin/toggle' }]
-      : []),
-  ]
+    case 'koordinator_lapangan':
+      return [
+        {
+          label: 'Dashboard',
+          to: '/korlap',
+          icon: (
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+            </svg>
+          ),
+        },
+        {
+          label: 'Penjadwalan',
+          to: '/scheduling/session-list',
+          icon: (
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+            </svg>
+          ),
+        },
+        {
+          label: 'Kanban Board',
+          to: '/korlap/kanban',
+          icon: (
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 17V7m0 10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h2a2 2 0 012 2m0 10a2 2 0 002 2h2a2 2 0 002-2V7a2 2 0 00-2-2h-2a2 2 0 00-2 2m0 10V7m6 10a2 2 0 002 2h2a2 2 0 002-2V7a2 2 0 00-2-2h-2a2 2 0 00-2 2" />
+            </svg>
+          ),
+        },
+      ]
 
-  return { main, others }
+    case 'penanggung_jawab_ruangan':
+      return [
+        {
+          label: 'Dashboard',
+          to: '/pj-ruangan',
+          icon: (
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+            </svg>
+          ),
+        },
+        {
+          label: 'Ruangan Saya',
+          to: '/korlap/rooms',
+          icon: (
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5m0 0h6m-6 0V11m6 10V11m-6 0a2 2 0 100-4 2 2 0 000 4zm6 0a2 2 0 100-4 2 2 0 000 4z" />
+            </svg>
+          ),
+        },
+      ]
+
+    case 'asisten_penilai':
+      return [
+        {
+          label: 'Dashboard',
+          to: '/penilai',
+          icon: (
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+            </svg>
+          ),
+        },
+        {
+          label: 'Daftar Tugas',
+          to: '/penilai/my-assignments',
+          icon: (
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
+            </svg>
+          ),
+        },
+        {
+          label: 'Riwayat Penilaian',
+          to: '/penilai/history',
+          icon: (
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+          ),
+        },
+      ]
+
+    case 'asisten':
+    case 'staff':
+    default:
+      return [
+        {
+          label: 'Dashboard',
+          to: '/calas',
+          icon: (
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+            </svg>
+          ),
+        },
+        {
+          label: 'Biodata',
+          to: '/calas/biodata',
+          icon: (
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+            </svg>
+          ),
+        },
+        {
+          label: 'Dokumen',
+          to: '/calas/documents',
+          icon: (
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+            </svg>
+          ),
+        },
+        {
+          label: 'Timeline',
+          to: '/calas/timeline',
+          icon: (
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+            </svg>
+          ),
+        },
+      ]
+  }
 }
+
+const SIDEBAR_EXPANDED_WIDTH = 260
+const SIDEBAR_COLLAPSED_WIDTH = 72
 
 export default function AppSidebar() {
   const { isExpanded, isMobileOpen, isHovered, setIsHovered } = useSidebar()
-  const location = useLocation()
-  const user = useAuthStore((s) => s.user)
-  const role = user?.role || 'asisten'
-  const { main: navItems, others: othersItems } = getNavItems(role)
+  const { user, logout } = useAuth()
+  const role: Role = user?.role || 'asisten'
+  const navItems = getNavItems(role)
 
-  const [openSubmenu, setOpenSubmenu] = useState<{ type: 'main' | 'others'; index: number } | null>(null)
-  const [subMenuHeight, setSubMenuHeight] = useState<Record<string, number>>({})
-  const subMenuRefs = useRef<Record<string, HTMLDivElement | null>>({})
-
-  const isActive = useCallback((path: string) => location.pathname === path, [location.pathname])
-
-  useEffect(() => {
-    let submenuMatched = false
-    ;(['main', 'others'] as const).forEach((menuType) => {
-      const items = menuType === 'main' ? navItems : othersItems
-      items.forEach((nav, index) => {
-        if (nav.subItems) {
-          nav.subItems.forEach((subItem) => {
-            if (isActive(subItem.path)) {
-              setOpenSubmenu({ type: menuType, index })
-              submenuMatched = true
-            }
-          })
-        }
-      })
-    })
-    if (!submenuMatched) setOpenSubmenu(null)
-  }, [location, isActive, navItems, othersItems])
-
-  useEffect(() => {
-    if (openSubmenu !== null) {
-      const key = `${openSubmenu.type}-${openSubmenu.index}`
-      if (subMenuRefs.current[key]) {
-        setSubMenuHeight((prev) => ({
-          ...prev,
-          [key]: subMenuRefs.current[key]?.scrollHeight || 0,
-        }))
-      }
-    }
-  }, [openSubmenu])
-
-  const handleSubmenuToggle = (index: number, menuType: 'main' | 'others') => {
-    setOpenSubmenu((prev) =>
-      prev && prev.type === menuType && prev.index === index ? null : { type: menuType, index },
-    )
-  }
-
-  const renderMenuItems = (items: NavItem[], menuType: 'main' | 'others') => (
-    <ul className="flex flex-col gap-1">
-      {items.map((nav, index) => (
-        <li key={nav.name}>
-          {nav.subItems ? (
-            <button
-              onClick={() => handleSubmenuToggle(index, menuType)}
-              className={`menu-item group w-full text-left ${openSubmenu?.type === menuType && openSubmenu?.index === index ? 'menu-item-active' : 'menu-item-inactive'} ${!isExpanded && !isHovered ? 'lg:justify-center' : 'lg:justify-start'}`}
-            >
-              <span className={`menu-item-icon-size ${openSubmenu?.type === menuType && openSubmenu?.index === index ? 'menu-item-icon-active' : 'menu-item-icon-inactive'}`}>{nav.icon}</span>
-              {(isExpanded || isHovered || isMobileOpen) && <span className="menu-item-text">{nav.name}</span>}
-              {(isExpanded || isHovered || isMobileOpen) && (
-                <ChevronDownSvg className={`ml-auto w-5 h-5 transition-transform duration-200 ${openSubmenu?.type === menuType && openSubmenu?.index === index ? 'rotate-180 text-brand-500' : ''}`} />
-              )}
-            </button>
-          ) : (
-            nav.path && (
-              <Link
-                to={nav.path}
-                className={`menu-item group ${isActive(nav.path) ? 'menu-item-active' : 'menu-item-inactive'} ${!isExpanded && !isHovered ? 'lg:justify-center' : 'lg:justify-start'}`}
-              >
-                <span className={`menu-item-icon-size ${isActive(nav.path) ? 'menu-item-icon-active' : 'menu-item-icon-inactive'}`}>{nav.icon}</span>
-                {(isExpanded || isHovered || isMobileOpen) && <span className="menu-item-text">{nav.name}</span>}
-              </Link>
-            )
-          )}
-          {nav.subItems && (isExpanded || isHovered || isMobileOpen) && (
-            <div
-              ref={(el) => {
-                subMenuRefs.current[`${menuType}-${index}`] = el
-              }}
-              className="overflow-hidden transition-all duration-300"
-              style={{
-                height:
-                  openSubmenu?.type === menuType && openSubmenu?.index === index
-                    ? `${subMenuHeight[`${menuType}-${index}`]}px`
-                    : '0px',
-              }}
-            >
-              <ul className="mt-1 space-y-1 ml-9">
-                {nav.subItems.map((subItem) => (
-                  <li key={subItem.name}>
-                    <Link
-                      to={subItem.path}
-                      className={`menu-dropdown-item ${isActive(subItem.path) ? 'menu-dropdown-item-active' : 'menu-dropdown-item-inactive'}`}
-                    >
-                      {subItem.name}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
-        </li>
-      ))}
-    </ul>
-  )
+  const showFull = isExpanded || isHovered || isMobileOpen
 
   return (
     <aside
-      className={`fixed mt-16 flex flex-col lg:mt-0 top-0 px-4 left-0 bg-white dark:bg-gray-900 dark:border-gray-800 text-gray-900 h-screen transition-all duration-300 ease-in-out z-50 border-r border-gray-200 ${isExpanded || isMobileOpen ? 'w-[260px]' : isHovered ? 'w-[260px]' : 'w-[72px]'} ${isMobileOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0`}
+      className={`fixed top-0 left-0 z-50 h-screen bg-surface border-r border-border flex flex-col transition-all duration-300 ease-in-out ${
+        showFull ? `w-[${SIDEBAR_EXPANDED_WIDTH}px]` : `w-[${SIDEBAR_COLLAPSED_WIDTH}px]`
+      } ${isMobileOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0`}
+      style={{ width: showFull ? SIDEBAR_EXPANDED_WIDTH : SIDEBAR_COLLAPSED_WIDTH }}
       onMouseEnter={() => !isExpanded && setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      <div className={`py-6 flex ${!isExpanded && !isHovered ? 'lg:justify-center' : 'justify-start'}`}>
-        <Link to="/" className="flex items-center gap-2">
-          {(isExpanded || isHovered || isMobileOpen) ? (
-            <span className="text-lg font-bold text-lepkom-green">HRIS LepKOM</span>
-          ) : (
-            <span className="w-8 h-8 rounded-lg bg-lepkom-green flex items-center justify-center text-white font-bold text-sm">H</span>
-          )}
-        </Link>
-      </div>
-      <div className="flex flex-col overflow-y-auto duration-300 ease-linear no-scrollbar flex-1">
-        <nav className="mb-4">
-          <div className="flex flex-col gap-3">
-            <div>
-              <h2 className={`mb-3 text-xs uppercase tracking-wider text-gray-400 ${!isExpanded && !isHovered ? 'lg:text-center' : ''}`}>
-                {(isExpanded || isHovered || isMobileOpen) ? 'Menu' : <HorizontaLDotsSvg className="size-5 mx-auto" />}
-              </h2>
-              {renderMenuItems(navItems, 'main')}
-            </div>
-            {othersItems.length > 0 && (
-              <div>
-                <h2 className={`mb-3 text-xs uppercase tracking-wider text-gray-400 ${!isExpanded && !isHovered ? 'lg:text-center' : ''}`}>
-                  {(isExpanded || isHovered || isMobileOpen) ? 'Lainnya' : <HorizontaLDotsSvg className="size-5 mx-auto" />}
-                </h2>
-                {renderMenuItems(othersItems, 'others')}
-              </div>
-            )}
+      {/* ─── Logo & Title ─── */}
+      <div className={`bg-white border-b border-border px-4 py-4 flex items-center gap-3 ${!showFull ? 'justify-center' : ''}`}>
+        <img
+          src="/assets/images/logo.svg"
+          alt="LEPKOM Logo"
+          className={`object-contain transition-all duration-300 ${showFull ? 'h-9 w-auto' : 'h-8 w-8'}`}
+          style={!showFull ? { objectPosition: 'left', clipPath: 'inset(0 75% 0 0)' } : undefined}
+        />
+        {showFull && (
+          <div className="min-w-0">
+            <p className="text-xs font-bold text-lepkom-blue uppercase tracking-wider leading-tight">Rekrutmen</p>
+            <p className="text-xs font-bold text-lepkom-green uppercase tracking-wider leading-tight">Asisten</p>
           </div>
-        </nav>
+        )}
+      </div>
+
+      {/* ─── Navigation ─── */}
+      <nav className="flex-1 overflow-y-auto py-4 space-y-1 scrollbar-thin">
+        {showFull && (
+          <h3 className="px-4 mb-2 text-[10px] font-bold uppercase tracking-widest text-gray-400">
+            Menu
+          </h3>
+        )}
+        {navItems.map((item) => (
+          <NavLink
+            key={item.to}
+            to={item.to}
+            end={item.to === '/admin' || item.to === '/calas' || item.to === '/penilai' || item.to === '/korlap' || item.to === '/pj-ruangan' || item.to === '/pj-soal'}
+            className={({ isActive: active }) =>
+              `flex items-center gap-3 mx-3 text-sm rounded-lg transition-all duration-200 ${
+                showFull ? 'px-3 py-2.5' : 'px-0 py-2.5 justify-center'
+              } ${
+                active
+                  ? 'bg-lepkom-green/10 text-lepkom-green font-semibold shadow-sm'
+                  : 'text-gray-600 hover:bg-page hover:text-gray-900'
+              }`
+            }
+            title={!showFull ? item.label : undefined}
+          >
+            <span className="flex-shrink-0">{item.icon}</span>
+            {showFull && <span className="truncate">{item.label}</span>}
+          </NavLink>
+        ))}
+      </nav>
+
+      {/* ─── Footer User Info ─── */}
+      <div className={`border-t border-border bg-gray-50/50 ${showFull ? 'px-4 py-3' : 'px-2 py-3'}`}>
+        {showFull ? (
+          <div className="flex items-center justify-between">
+            <div className="min-w-0 flex-1 mr-2">
+              <p className="text-sm font-semibold text-gray-800 truncate">{user?.nama || 'Pengguna'}</p>
+              <Badge variant="role" className="mt-0.5">
+                {ROLE_LABELS[role] || role}
+              </Badge>
+            </div>
+            <button
+              onClick={logout}
+              title="Keluar"
+              className="p-2 text-gray-500 hover:text-red-600 rounded-lg hover:bg-red-50 transition-colors focus:outline-none"
+            >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+              </svg>
+            </button>
+          </div>
+        ) : (
+          <div className="flex flex-col items-center gap-2">
+            <div className="w-8 h-8 rounded-full bg-lepkom-blue text-white flex items-center justify-center font-bold text-xs">
+              {user?.nama ? user.nama.charAt(0).toUpperCase() : 'U'}
+            </div>
+            <button
+              onClick={logout}
+              title="Keluar"
+              className="p-1.5 text-gray-500 hover:text-red-600 rounded-lg hover:bg-red-50 transition-colors focus:outline-none"
+            >
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+              </svg>
+            </button>
+          </div>
+        )}
       </div>
     </aside>
   )
 }
 
-// ─── SVG Icons (inline) ──────────────────────────────────────────────────────
-
-function GridSvg() { return <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg> }
-function UserSvg() { return <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><circle cx="12" cy="8" r="4"/><path d="M4 21v-1a6 6 0 0 1 6-6h4a6 6 0 0 1 6 6v1"/></svg> }
-function FolderSvg() { return <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg> }
-function ListSvg() { return <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg> }
-function CalenderSvg() { return <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg> }
-function BoxCubeSvg() { return <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg> }
-function PlugInSvg() { return <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M12 22v-5"/><path d="M9 8V3"/><path d="M15 8V3"/><path d="M18 12v2a6 6 0 0 1-12 0v-2"/></svg> }
-function PencilSvg() { return <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M17 3a2.83 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/></svg> }
-function ChevronDownSvg({ className }: { className?: string }) { return <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className={className}><polyline points="6 9 12 15 18 9"/></svg> }
-function HorizontaLDotsSvg({ className }: { className?: string }) { return <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor" className={className}><circle cx="12" cy="12" r="2"/><circle cx="4" cy="12" r="2"/><circle cx="20" cy="12" r="2"/></svg> }
+export { SIDEBAR_EXPANDED_WIDTH, SIDEBAR_COLLAPSED_WIDTH }

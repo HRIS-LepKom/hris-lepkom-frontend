@@ -11,7 +11,11 @@ export const Skeleton: React.FC<SkeletonProps> = ({ className = 'h-4 w-full', co
   return (
     <div className="space-y-2 w-full">
       {items.map((_, index) => (
-        <div key={index} className={`bg-gray-200 animate-pulse rounded ${className}`.trim()} />
+        <div
+          key={index}
+          className={`bg-gray-200 animate-pulse rounded ${className}`.trim()}
+          style={{ animationDuration: '1s' }}
+        />
       ))}
     </div>
   )

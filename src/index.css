@@ -10,69 +10,27 @@
   --color-status-green: #10B981;
   --color-status-yellow: #F59E0B;
   --color-status-red: #EF4444;
-  --color-brand-25: #f0fdf4;
-  --color-brand-50: #dcfce7;
-  --color-brand-100: #bbf7d0;
-  --color-brand-500: #156935;
-  --color-brand-600: #0f4d28;
   --font-sans: "Inter", sans-serif;
+  --animate-pulse: pulse 1s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
 
-/* ─── Base ──────────────────────────────────────────────────────────────────── */
-@layer base {
-  body {
-    @apply relative font-normal z-1 bg-gray-50;
-  }
+/* Global Interactive Cursor Styles */
+button,
+[role="button"],
+a,
+select,
+input[type="submit"],
+input[type="button"],
+input[type="reset"],
+input[type="checkbox"],
+input[type="radio"],
+label[for] {
+  cursor: pointer;
 }
 
-/* ─── Sidebar menu utilities ────────────────────────────────────────────────── */
-@utility menu-item {
-  @apply relative flex items-center w-full gap-3 px-3 py-2 font-medium rounded-lg text-sm;
-}
-
-@utility menu-item-active {
-  @apply bg-brand-50 text-brand-500;
-}
-
-@utility menu-item-inactive {
-  @apply text-gray-700 hover:bg-gray-100 group-hover:text-gray-700;
-}
-
-@utility menu-item-icon-active {
-  @apply text-brand-500;
-}
-
-@utility menu-item-icon-size {
-  & svg {
-    @apply !w-5 !h-5;
-  }
-}
-
-@utility menu-item-icon-inactive {
-  @apply text-gray-500 group-hover:text-gray-700;
-}
-
-@utility menu-item-text {
-  @apply whitespace-nowrap overflow-hidden text-ellipsis;
-}
-
-@utility menu-dropdown-item {
-  @apply relative flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium;
-}
-
-@utility menu-dropdown-item-active {
-  @apply bg-brand-50 text-brand-500;
-}
-
-@utility menu-dropdown-item-inactive {
-  @apply text-gray-700 hover:bg-gray-100;
-}
-
-/* ─── Scrollbar utilities ───────────────────────────────────────────────────── */
-@utility no-scrollbar {
-  &::-webkit-scrollbar {
-    display: none;
-  }
-  -ms-overflow-style: none;
-  scrollbar-width: none;
+button:disabled,
+[role="button"][aria-disabled="true"],
+input:disabled,
+select:disabled {
+  cursor: not-allowed;
 }
