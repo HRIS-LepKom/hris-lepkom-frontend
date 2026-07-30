@@ -10,3 +10,4 @@ export * from './stringConversion';
 export * from './fileValidator';
 export * from './gradeCalculator';
 export * from './localStorage';
+export * from './authUserData';

@@ -13,5 +13,8 @@ export const getCookie = (key: string): string | undefined => {
 };
 
 export const deleteCookie = (key: string) => {
+  // Clear on specific path and root, with and without domain to ensure deletion
   document.cookie = `${key}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
+  document.cookie = `${key}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/lepkom;`;
+  document.cookie = `${key}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=${window.location.hostname};`;
 };

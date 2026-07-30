@@ -1,5 +1,6 @@
-import axios, { InternalAxiosRequestConfig, AxiosResponse, AxiosError } from 'axios';
-import { path, STORAGE_TOKEN_KEY, STORAGE_ROLE_KEY } from './consts';
+import axios from 'axios';
+import type { InternalAxiosRequestConfig, AxiosResponse, AxiosError } from 'axios';
+import { STORAGE_TOKEN_KEY, STORAGE_ROLE_KEY } from './consts';
 import { getCookie, deleteCookie, setCookie } from './helpers/cookie';
 
 const BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000';
@@ -86,7 +87,8 @@ const errorResponseHandler = async (error: AxiosError) => {
         processQueue(refreshError, null);
         deleteCookie(STORAGE_TOKEN_KEY);
         deleteCookie(STORAGE_ROLE_KEY);
-        window.location.href = path.login;
+        const redirectRole = role === 'asisten' ? 'asisten' : 'calas';
+        window.location.href = `/login?role=${redirectRole}`;
         return Promise.reject(refreshError);
       } finally {
         isRefreshing = false;
@@ -95,7 +97,13 @@ const errorResponseHandler = async (error: AxiosError) => {
       // 401 but not because of expired token (e.g. invalid token, wrong password, banned user)
       deleteCookie(STORAGE_TOKEN_KEY);
       deleteCookie(STORAGE_ROLE_KEY);
-      window.location.href = path.login;
+      const currentRole = getCookie(STORAGE_ROLE_KEY) || 'calas';
+      const redirectRole = currentRole === 'asisten' ? 'asisten' : 'calas';
+      
+      // Jangan paksa refresh halaman jika request 401 ini berasal dari proses Login itu sendiri
+      if (!originalRequest.url?.includes('/login')) {
+        window.location.href = `/login?role=${redirectRole}`;
+      }
     }
   }
 

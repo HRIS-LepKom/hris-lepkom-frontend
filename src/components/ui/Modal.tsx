@@ -6,7 +6,10 @@ export interface ModalProps {
   title: React.ReactNode
   children: React.ReactNode
   footer?: React.ReactNode
-  size?: 'sm' | 'md' | 'lg'
+  size?: 'xs' | 'sm' | 'md' | 'lg'
+  hideHeader?: boolean
+  hideCloseButton?: boolean
+  contentClassName?: string
 }
 
 export const Modal: React.FC<ModalProps> = ({
@@ -16,6 +19,9 @@ export const Modal: React.FC<ModalProps> = ({
   children,
   footer,
   size = 'md',
+  hideHeader = false,
+  hideCloseButton = false,
+  contentClassName = '',
 }) => {
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -36,6 +42,7 @@ export const Modal: React.FC<ModalProps> = ({
   if (!isOpen) return null
 
   const sizeClasses = {
+    xs: 'max-w-sm',
     sm: 'max-w-md',
     md: 'max-w-lg',
     lg: 'max-w-2xl',
@@ -52,21 +59,25 @@ export const Modal: React.FC<ModalProps> = ({
         className={`relative bg-white rounded-xl shadow-xl w-full ${sizeClasses[size]} z-10 my-8 flex flex-col max-h-[90vh]`}
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="flex items-center justify-between px-6 py-4 border-b border-border">
-          <h3 className="text-lg font-semibold text-gray-900">{title}</h3>
-          <button
-            type="button"
-            onClick={onClose}
-            className="text-gray-400 hover:text-gray-600 p-1 rounded-lg hover:bg-gray-100 transition-colors focus:outline-none"
-            aria-label="Tutup modal"
-          >
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-            </svg>
-          </button>
-        </div>
+        {!hideHeader && (
+          <div className="flex items-center justify-between px-6 py-4 border-b border-border">
+            <h3 className="text-lg font-semibold text-foreground">{title}</h3>
+            {!hideCloseButton && (
+              <button
+                type="button"
+                onClick={onClose}
+                className="text-muted-foreground hover:text-foreground p-1 rounded-lg hover:bg-muted transition-colors focus:outline-none"
+                aria-label="Tutup modal"
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            )}
+          </div>
+        )}
 
-        <div className="p-6 overflow-y-auto flex-1">{children}</div>
+        <div className={`p-6 overflow-y-auto flex-1 ${contentClassName}`}>{children}</div>
 
         {footer && (
           <div className="border-t border-border px-6 py-4 flex justify-end gap-3 bg-gray-50/50 rounded-b-xl">

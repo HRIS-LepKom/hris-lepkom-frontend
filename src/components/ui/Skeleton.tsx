@@ -1,22 +1,29 @@
-import React from 'react'
+import { cn } from "@/lib/utils"
 
-export interface SkeletonProps {
-  className?: string
-  count?: number
+export interface SkeletonProps extends React.HTMLAttributes<HTMLDivElement> {
+  count?: number;
 }
 
-export const Skeleton: React.FC<SkeletonProps> = ({ className = 'h-4 w-full', count = 1 }) => {
-  const items = Array.from({ length: count })
-
+function Skeleton({
+  className,
+  count = 1,
+  ...props
+}: SkeletonProps) {
+  if (count > 1) {
+    return (
+      <div className="space-y-2 w-full">
+        {Array.from({ length: count }).map((_, i) => (
+          <div key={i} className={cn("animate-pulse rounded-md bg-muted h-4 w-full", className)} {...props} />
+        ))}
+      </div>
+    )
+  }
   return (
-    <div className="space-y-2 w-full">
-      {items.map((_, index) => (
-        <div
-          key={index}
-          className={`bg-gray-200 animate-pulse rounded ${className}`.trim()}
-          style={{ animationDuration: '1s' }}
-        />
-      ))}
-    </div>
+    <div
+      className={cn("animate-pulse rounded-md bg-muted", className)}
+      {...props}
+    />
   )
 }
+
+export { Skeleton }
