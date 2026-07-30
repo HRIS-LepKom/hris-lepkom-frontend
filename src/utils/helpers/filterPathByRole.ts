@@ -18,6 +18,9 @@ export const filterPathByRole = (role: UserRole): string[] => {
       path.lepkom.masterData.materi.default,
       path.lepkom.masterData.soal.default,
       path.lepkom.masterData.questionCard.default,
+      path.lepkom.calasSoal.default,
+      path.lepkom.calasSoal.daftarSoal.default,
+      path.lepkom.calasSoal.uploadJawaban.default
     ],
     penanggung_jawab_ruangan: [
       path.lepkom.dashboard.default,
@@ -27,7 +30,11 @@ export const filterPathByRole = (role: UserRole): string[] => {
       path.lepkom.masterData.calas.detailCalas,
       path.lepkom.masterData.materi.default,
       path.lepkom.masterData.questionCard.default,
-      path.lepkom.penjadwalan.roomPlacement.default, 
+      path.lepkom.penugasan.default,
+      path.lepkom.penugasan.checkUploadJawaban.default,
+      path.lepkom.penugasan.penempatanRuanganAsisten.default,
+      path.lepkom.penugasan.penempatanRuanganCalas.default,
+      path.lepkom.penugasan.historyPenilaian.default,
     ],
     koordinator_lapangan: [
       path.lepkom.dashboard.default,
@@ -35,10 +42,10 @@ export const filterPathByRole = (role: UserRole): string[] => {
       path.lepkom.masterData.asisten.detailAsisten,
       path.lepkom.masterData.calas.default,
       path.lepkom.masterData.calas.detailCalas,
-      path.lepkom.penjadwalan.default,
-      path.lepkom.penjadwalan.session.default,
-      path.lepkom.penjadwalan.roomAssignment.default,
-      path.lepkom.penjadwalan.roomPlacement.default,
+      path.lepkom.penugasan.default,
+      path.lepkom.penugasan.checkUploadJawaban.default,
+      path.lepkom.penugasan.penempatanRuanganAsisten.default,
+      path.lepkom.penugasan.penempatanRuanganCalas.default,
       path.lepkom.masterData.materi.default,
       path.lepkom.masterData.questionCard.default,
       path.lepkom.masterData.calas.default, 
@@ -51,9 +58,13 @@ export const filterPathByRole = (role: UserRole): string[] => {
       path.lepkom.masterData.calas.detailCalas,
       path.lepkom.masterData.materi.default,
       path.lepkom.masterData.questionCard.default,
-      path.lepkom.penilaian.default,
-      path.lepkom.penilaian.praktek.default,
-      path.lepkom.penilaian.project.default,
+      path.lepkom.penugasan.default,
+      path.lepkom.penugasan.praktek.default,
+      path.lepkom.penugasan.praktek.form,
+      path.lepkom.penugasan.project.default,
+      path.lepkom.penugasan.project.form,
+      path.lepkom.penugasan.checkUploadJawaban.default,
+
     ],
     asisten: [
       path.lepkom.masterData.materi.default,
@@ -64,7 +75,7 @@ export const filterPathByRole = (role: UserRole): string[] => {
     staff: [
       path.lepkom.masterData.materi.default,
       path.lepkom.masterData.questionCard.default,
-            path.lepkom.dashboard.default,
+      path.lepkom.dashboard.default,
       path.lepkom.masterData.asisten.default,
       path.lepkom.masterData.asisten.detailAsisten,
     ],
@@ -75,9 +86,9 @@ export const filterPathByRole = (role: UserRole): string[] => {
       path.lepkom.biodata.pendidikan.default,
       path.lepkom.biodata.keluarga.default,
       path.lepkom.biodata.berkas.default,
-      path.lepkom.ujian.default,
-      path.lepkom.ujian.praktek.default,
-      path.lepkom.ujian.project.default,
+      path.lepkom.calasSoal.default,
+      path.lepkom.calasSoal.daftarSoal.default,
+      path.lepkom.calasSoal.uploadJawaban.default
     ]
   };
 
