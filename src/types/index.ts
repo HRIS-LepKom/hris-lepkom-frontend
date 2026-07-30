@@ -3,16 +3,17 @@
 export type Role =
   | 'super_admin'
   | 'pj_soal_materi'
-  | 'penanggung_jawab_ruangan'
+  | 'pj_ruangan'
   | 'koordinator_lapangan'
   | 'asisten_penilai'
   | 'asisten'
   | 'staff'
+  | 'calas'
 
 export const ASISTEN_ROLES: readonly Role[] = [
   'super_admin',
   'pj_soal_materi',
-  'penanggung_jawab_ruangan',
+  'pj_ruangan',
   'koordinator_lapangan',
   'asisten_penilai',
   'asisten',

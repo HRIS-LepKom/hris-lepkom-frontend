@@ -1,29 +1,43 @@
-import React from 'react'
+import * as React from "react"
+import { cva, type VariantProps } from "class-variance-authority"
 
-export interface BadgeProps {
-  variant?: 'role' | 'status-green' | 'status-yellow' | 'status-red' | 'info'
-  children: React.ReactNode
-  className?: string
-}
+import { cn } from "@/lib/utils"
 
-export const Badge: React.FC<BadgeProps> = ({
-  variant = 'info',
-  children,
-  className = '',
-}) => {
-  const baseStyles = 'inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold'
-
-  const variantStyles = {
-    role: 'bg-lepkom-blue/10 text-lepkom-blue',
-    'status-green': 'bg-green-100 text-green-700',
-    'status-yellow': 'bg-amber-100 text-amber-700',
-    'status-red': 'bg-red-100 text-red-700',
-    info: 'bg-blue-100 text-blue-700',
+const badgeVariants = cva(
+  "inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2",
+  {
+    variants: {
+      variant: {
+        default:
+          "border-transparent bg-primary text-primary-foreground hover:bg-primary/80",
+        secondary:
+          "border-transparent bg-secondary text-secondary-foreground hover:bg-secondary/80",
+        destructive:
+          "border-transparent bg-destructive text-destructive-foreground hover:bg-destructive/80",
+        outline: "text-foreground",
+        success: "border-transparent bg-[#10B981] text-white hover:bg-[#10B981]/80", // Lolos
+        warning: "border-transparent bg-[#F59E0B] text-white hover:bg-[#F59E0B]/80", // Pertimbangan
+        "status-green": "border-transparent bg-[#10B981] text-white hover:bg-[#10B981]/80", 
+        "status-yellow": "border-transparent bg-[#F59E0B] text-white hover:bg-[#F59E0B]/80", 
+        "status-red": "border-transparent bg-destructive text-destructive-foreground hover:bg-destructive/80",
+        role: "border-transparent bg-primary text-primary-foreground hover:bg-primary/80",
+        info: "border-transparent bg-primary text-primary-foreground hover:bg-primary/80",
+      },
+    },
+    defaultVariants: {
+      variant: "default",
+    },
   }
+)
 
+export interface BadgeProps
+  extends React.HTMLAttributes<HTMLDivElement>,
+    VariantProps<typeof badgeVariants> {}
+
+function Badge({ className, variant, ...props }: BadgeProps) {
   return (
-    <span className={`${baseStyles} ${variantStyles[variant]} ${className}`.trim()}>
-      {children}
-    </span>
+    <div className={cn(badgeVariants({ variant, className }))} {...props} />
   )
 }
+
+export { Badge, badgeVariants }

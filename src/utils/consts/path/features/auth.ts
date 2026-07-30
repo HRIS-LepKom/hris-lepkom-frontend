@@ -1,12 +1,17 @@
 export const authPaths = {
+  login: '/login',
+  register: '/register',
+  forgotPassword: '/forgot-password',
+  resetPassword: '/reset-password',
+  // Backwards compatibility for any leftover links (to be removed later if needed)
   asisten: {
-    login: '/auth/asisten/login',
-    requestReset: '/auth/asisten/request-reset',
+    login: '/login?role=asisten',
+    requestReset: '/forgot-password',
   },
   calas: {
-    login: '/auth/calas/login',
-    register: '/auth/calas/register',
-    forgotPassword: '/auth/calas/forgot-password',
-    resetPassword: '/auth/calas/reset-password',
+    login: '/login?role=calas',
+    register: '/register',
+    forgotPassword: '/forgot-password',
+    resetPassword: '/reset-password',
   }
 };
