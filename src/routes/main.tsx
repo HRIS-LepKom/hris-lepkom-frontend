@@ -13,33 +13,27 @@ import LandingPage from '@/features/shared/landing-page';
 import {
   dashboardRoute,
   masterDataRoute,
-  soalRoute,
-  penjadwalanRoute,
-  penilaianRoute,
   biodataRoute,
-  ujianRoute
+  calasSoalRoute,
+  penugasanRoute
 } from './config/route';
 
 import {
   dashboardMenu,
   pengumumanMenu,
   masterDataMenu,
-  soalMenu,
-  penjadwalanMenu,
-  penilaianMenu,
   biodataMenu,
-  ujianMenu
+  calasSoalMenu,
+  penugasanMenu
 } from './config/menu';
 
 export const mainMenus = [
   dashboardMenu,
   pengumumanMenu,
   masterDataMenu,
-  soalMenu,
-  penjadwalanMenu,
-  penilaianMenu,
   biodataMenu,
-  ujianMenu
+  calasSoalMenu,
+  penugasanMenu
 ];
 
 export const mainRoutes = createBrowserRouter(
@@ -59,11 +53,9 @@ export const mainRoutes = createBrowserRouter(
       children: [
         ...dashboardRoute,
         ...masterDataRoute,
-        ...soalRoute,
-        ...penjadwalanRoute,
-        ...penilaianRoute,
         ...biodataRoute,
-        ...ujianRoute,
+        ...calasSoalRoute,
+        ...penugasanRoute,
         {
           path: '/not-permitted',
           element: <ErrorPermission />
