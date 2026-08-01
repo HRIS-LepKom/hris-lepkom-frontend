@@ -1,5 +1,3 @@
-import React from 'react';
-
 const HeaderContent = () => {
   return (
     <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 p-6 bg-white rounded-xl border border-gray-100 shadow-sm relative overflow-hidden">

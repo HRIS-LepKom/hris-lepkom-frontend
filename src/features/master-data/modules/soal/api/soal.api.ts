@@ -142,3 +142,19 @@ export const useDeleteTempSoalFile = () => {
     },
   });
 };
+
+export const downloadSoalFile = async (id: string, filename: string = 'soal_file') => {
+  const res = await api.get<{ data: { url: string } }>(`/api/soal/${id}/download`);
+  const downloadUrl = res.data.data.url;
+  
+  // Use a temporary anchor tag to force download with correct filename if possible,
+  // or fallback to window.open if it's a cross-origin signed URL.
+  const link = document.createElement('a');
+  link.href = downloadUrl;
+  link.target = '_blank';
+  link.rel = 'noopener noreferrer';
+  link.download = filename;
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+};

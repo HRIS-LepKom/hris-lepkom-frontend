@@ -3,7 +3,7 @@ import { ErrorPage } from '@/features/shared/error';
 import LazyRoute from '@/components/layout/LazyRoute';
 import { path } from '@/utils/consts';
 
-const BiodataPage = lazy(() => import('@/pages/lepkom/biodata'));
+const BiodataCalasDashboard = lazy(() => import('@/features/biodata'))
 const PersonalPage = lazy(() => import('@/pages/lepkom/biodata/personal'));
 const PendidikanPage = lazy(() => import('@/pages/lepkom/biodata/pendidikan'));
 const KeluargaPage = lazy(() => import('@/pages/lepkom/biodata/keluarga'));
@@ -12,7 +12,7 @@ const BerkasPage = lazy(() => import('@/pages/lepkom/biodata/berkas'));
 export const biodataRoute = [
   {
     path: path.lepkom.biodata.default,
-    element: <LazyRoute component={BiodataPage} />,
+    element: <LazyRoute component={BiodataCalasDashboard} />,
     elementError: <ErrorPage />
   },
   {

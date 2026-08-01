@@ -2,8 +2,10 @@ import { Badge } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/Button';
 import { FiEdit2, FiTrash2, FiDownload, FiEye, FiEyeOff } from 'react-icons/fi';
 import type { Soal } from '../api/soal.api';
+import { downloadSoalFile } from '../api/soal.api';
 import { EmptyCellText } from '@/components/shared/EmptyCellText';
 import { path } from '@/utils/consts';
+import toast from 'react-hot-toast';
 
 export const getListSoalColumns = (
   actions: {
@@ -64,15 +66,18 @@ export const getListSoalColumns = (
       renderCell: (info: any) => {
         const row = info.row.original as Soal;
         return row.file ? (
-          <a
-            href={`${import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000'}/api/soal/${row._id}/download`}
-            target="_blank"
-            rel="noopener noreferrer"
+          <button
+            onClick={() => {
+              const toastId = toast.loading('Mendownload...');
+              downloadSoalFile(row._id, row.file?.split('/').pop() || 'soal_file')
+                .then(() => toast.success('Berhasil mendownload', { id: toastId }))
+                .catch(() => toast.error('Gagal mendownload', { id: toastId }));
+            }}
             className="inline-flex items-center gap-1.5 text-sm text-brand-green hover:text-brand-green/80 font-medium bg-brand-green/10 px-2.5 py-1 rounded-md transition-colors"
           >
             <FiDownload className="w-4 h-4" />
             Download
-          </a>
+          </button>
         ) : (
           <EmptyCellText />
         );
