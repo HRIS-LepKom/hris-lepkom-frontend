@@ -13,6 +13,7 @@ export const biodataMenu = {
       key: 'personal',
       label: 'Data Pribadi',
       path: path.lepkom.biodata.personal.default,
+      description: 'Kelola Data Pribadi Anda',
       icon: FaUserEdit,
       role: ['calas']
     },
@@ -20,6 +21,7 @@ export const biodataMenu = {
       key: 'pendidikan',
       label: 'Pendidikan',
       path: path.lepkom.biodata.pendidikan.default,
+      description: 'Kelola Data Pendidikan Anda.',
       icon: FaGraduationCap,
       role: ['calas']
     },
@@ -27,6 +29,7 @@ export const biodataMenu = {
       key: 'keluarga',
       label: 'Keluarga',
       path: path.lepkom.biodata.keluarga.default,
+      description: 'Kelola Data Keluarga Anda.',
       icon: FaUsers,
       role: ['calas']
     },
@@ -34,6 +37,7 @@ export const biodataMenu = {
       key: 'berkas',
       label: 'Upload Berkas',
       path: path.lepkom.biodata.berkas.default,
+      description: 'Upload File KRS,DNS & CV anda',
       icon: FaFileArchive,
       role: ['calas']
     }

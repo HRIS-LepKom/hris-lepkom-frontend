@@ -5,6 +5,7 @@ import { path } from '@/utils/consts';
 
 const DashboardPengumuman = lazy(() => import('@/pages/lepkom/dashboard/pengumuman'));
 const CalasSoalDashboard = lazy(() => import('@/features/soal-calas'))
+const DaftarSoalPage = lazy(() => import('@/features/soal-calas/modules/daftar-soal'));
 
 export const calasSoalRoute = [
   {
@@ -14,7 +15,7 @@ export const calasSoalRoute = [
   },
   {
     path: path.lepkom.calasSoal.daftarSoal.default, // untuk halaman daftar soal
-    element: <LazyRoute component={DashboardPengumuman} />,
+    element: <LazyRoute component={DaftarSoalPage} />,
     elementError: <ErrorPage />
   },
   {

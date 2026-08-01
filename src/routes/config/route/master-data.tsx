@@ -8,6 +8,7 @@ const MasterDataDashboard = lazy(() => import('@/features/master-data'));
 const MasterDataAsisten = lazy(() => import('@/features/master-data/modules/asisten'));
 const DetailAsisten = lazy(() => import('@/features/master-data/modules/detail-asisten'));
 const MasterDataCalas = lazy(() => import('@/features/master-data/modules/calas'));
+const DetailCalas = lazy(() => import('@/features/master-data/modules/detail-calas'));
 const MasterDataRekrutmen = lazy(() => import('@/features/master-data/modules/rekrutmen'));
 const MasterDataMateri = lazy(() => import('@/features/master-data/modules/materi'));
 const ResetRequests = lazy(() => import('@/features/master-data/modules/reset-requests'));
@@ -38,7 +39,7 @@ export const masterDataRoute = [
   },
   {
     path: path.lepkom.masterData.calas.detailCalas + '/:id',
-    element: <LazyRoute component={MasterDataCalas} />, // nantinya akan menjadi halaman detail asisten
+    element: <LazyRoute component={DetailCalas} />,
     elementError: <ErrorPage />
   },
   {

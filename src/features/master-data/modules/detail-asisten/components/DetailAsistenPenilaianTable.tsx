@@ -66,12 +66,14 @@ const DetailAsistenPenilaianTable: React.FC<Props> = ({ asistenId }) => {
       
       {totalData > 0 && (
         <PaginationPage
-          page={penilaianPage}
-          limit={penilaianLimit}
-          totalData={totalData}
-          onPageChange={setPenilaianPage}
-          onLimitChange={setPenilaianLimit}
-        />
+            currentPage={penilaianPage}
+            pageSize={penilaianLimit}
+            totalData={totalData}
+            setPageSize={(key, value) => {
+              if (key === 'currentPage') setPenilaianPage(value);
+              if (key === 'pageSize') setPenilaianLimit(value);
+            }}
+          />
       )}
     </div>
   );
