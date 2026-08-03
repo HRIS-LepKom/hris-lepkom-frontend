@@ -1,11 +1,26 @@
-import { ContentLayout } from "@/components/layout";
-import { useBreadcrumbStore } from "@/hooks/globalStore";
-import { path } from "@/utils/consts";
-import { useEffect } from "react";
-import HeaderContent from "./components/HeaderContent";
+import { useEffect } from 'react';
+import ContentLayout from '@/components/layout/ContentLayout/ContentLayout';
+import { useBreadcrumbStore } from '@/hooks/globalStore/useBreadcrumbStore';
+import { path } from '@/utils/consts';
+import HeaderContent from './components/HeaderContent';
+import UploadTable from './components/UploadTable';
+import useTableFiltersSortUrlSync from '@/hooks/shared/useTableFiltersSortUrlSync';
+import { useCheckUploadSocket } from './hooks/useCheckUploadSocket';
 
-const CheckUploadCalasPage = () => {
+const CheckUploadCalasModule = () => {
   const { setBreadcrumbItems } = useBreadcrumbStore();
+
+  const {
+    columnFilters,
+    setColumnFilters,
+    sort,
+    setState,
+    pageSize,
+    currentPage,
+  } = useTableFiltersSortUrlSync({ listUrlBase: path.lepkom.penugasan.checkUploadJawaban.default });
+
+  // Initialize socket realtime listener
+  useCheckUploadSocket();
 
   useEffect(() => {
     setBreadcrumbItems([
@@ -18,11 +33,22 @@ const CheckUploadCalasPage = () => {
 
   return (
     <ContentLayout>
-      <div className="flex flex-col gap-6">
-        <HeaderContent />
+      <div className="space-y-6">
+        <HeaderContent 
+          columnFilters={columnFilters} 
+          setColumnFilters={setColumnFilters} 
+        />
+        <UploadTable 
+          columnFilters={columnFilters}
+          setColumnFilters={setColumnFilters}
+          sort={sort}
+          setState={setState}
+          pageSize={pageSize}
+          currentPage={currentPage}
+        />
       </div>
     </ContentLayout>
   );
 };
 
-export default CheckUploadCalasPage;
+export default CheckUploadCalasModule;

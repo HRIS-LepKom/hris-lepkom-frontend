@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import { useMemo } from 'react';
 import { Card } from '@/components/ui/Card';
 import DefaultTable from '@/components/table/DefaultTable';
 import PaginationPage from '@/components/pagination/PaginationPage';

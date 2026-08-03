@@ -13,7 +13,7 @@ export const PenilaiQuickActionsWidget = () => {
         <Button 
           variant="outline" 
           className="h-auto flex-col items-center justify-center p-6 gap-3 border-dashed hover:border-lepkom-green hover:text-lepkom-green hover:bg-green-50 transition-all"
-          onClick={() => navigate(path.lepkom.penilaian.praktek.default)}
+          onClick={() => navigate(path.lepkom.penugasan.praktek.default)}
         >
           <FiCheckSquare className="w-8 h-8" />
           <span className="font-medium text-xs text-center">Penilaian Praktek</span>
@@ -22,7 +22,7 @@ export const PenilaiQuickActionsWidget = () => {
         <Button 
           variant="outline" 
           className="h-auto flex-col items-center justify-center p-6 gap-3 border-dashed hover:border-blue-500 hover:text-blue-500 hover:bg-blue-50 transition-all"
-          onClick={() => navigate(path.lepkom.penilaian.project.default)}
+          onClick={() => navigate(path.lepkom.penugasan.project.default)}
         >
           <FiFileText className="w-8 h-8" />
           <span className="font-medium text-xs text-center">Penilaian Project</span>

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+
 import { Badge } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/Button';
 import { 
@@ -9,8 +9,7 @@ import {
   FiTrash2, 
   FiEye,
   FiCheckCircle,
-  FiXCircle,
-  FiChevronDown
+  FiXCircle
 } from 'react-icons/fi';
 import { Link } from 'react-router-dom';
 import { path } from '@/utils/consts';
@@ -29,7 +28,6 @@ const TahapSaatIniCell = ({
   actions: any;
   isSuperAdmin: boolean;
 }) => {
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   
   const tahap = row.statusRekrutmen?.tahapSaatIni || 'registrasi';
   const isBanned = row.isBanned;
@@ -48,39 +46,26 @@ const TahapSaatIniCell = ({
       {!isBanned && tahap !== 'selesai' && isSuperAdmin && (
         <div className="flex items-center gap-1 relative">
           {isKeputusanAkhir ? (
-            <div className="relative">
+            <>
               <Button
                 variant="outline"
-                size="sm"
-                className="h-6 px-2 text-[10px] font-medium border-gray-300 text-gray-700 hover:bg-gray-50 flex items-center gap-1"
-                onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                size="icon"
+                title="Terima Calas"
+                className="h-6 w-6 text-green-600 hover:text-green-700 hover:bg-green-50 rounded-full border-green-200"
+                onClick={() => actions.handleAccept(row)}
               >
-                Keputusan <FiChevronDown className={`w-3 h-3 transition-transform ${isDropdownOpen ? 'rotate-180' : ''}`} />
+                <FiCheckCircle className="w-3 h-3" />
               </Button>
-
-              {isDropdownOpen && (
-                <>
-                  <div 
-                    className="fixed inset-0 z-10"
-                    onClick={() => setIsDropdownOpen(false)}
-                  />
-                  <div className="absolute left-0 top-full mt-1 w-36 bg-white border border-gray-100 shadow-lg rounded-md z-20 py-1">
-                    <button 
-                      onClick={() => { setIsDropdownOpen(false); actions.handleAccept(row); }}
-                      className="flex items-center gap-2 px-3 py-1.5 text-xs text-green-700 hover:bg-green-50 w-full text-left font-medium"
-                    >
-                      <FiCheckCircle className="w-3 h-3 text-green-600" /> Terima Calas
-                    </button>
-                    <button 
-                      onClick={() => { setIsDropdownOpen(false); actions.handleReject(row); }}
-                      className="flex items-center gap-2 px-3 py-1.5 text-xs text-red-700 hover:bg-red-50 w-full text-left font-medium"
-                    >
-                      <FiXCircle className="w-3 h-3 text-red-600" /> Tolak Calas
-                    </button>
-                  </div>
-                </>
-              )}
-            </div>
+              <Button
+                variant="outline"
+                size="icon"
+                title="Tolak Calas"
+                className="h-6 w-6 text-red-600 hover:text-red-700 hover:bg-red-50 rounded-full border-red-200"
+                onClick={() => actions.handleReject(row)}
+              >
+                <FiXCircle className="w-3 h-3" />
+              </Button>
+            </>
           ) : (
             <>
               <Button

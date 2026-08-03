@@ -31,7 +31,7 @@ export const AdminQuickActionsWidget = () => {
         <Button 
           variant="outline" 
           className="h-auto flex-col items-center justify-center p-6 gap-3 border-dashed hover:border-purple-500 hover:text-purple-500 hover:bg-purple-50 transition-all"
-          onClick={() => navigate(path.lepkom.soal.default)}
+          onClick={() => navigate(path.lepkom.masterData.soal.default)}
         >
           <FiFileText className="w-8 h-8" />
           <span className="font-medium">Kelola Soal</span>

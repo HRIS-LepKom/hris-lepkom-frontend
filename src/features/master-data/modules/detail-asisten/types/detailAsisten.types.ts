@@ -33,7 +33,9 @@ export interface ExamSessionRef {
 
 export interface HistoryRuangan extends AsistenHistoryItem {
   ruangan: number;
-  examSessionRef: ExamSessionRef;
+  rolePenugasan: string;
+  tanggal: string;
+  jenisUjian: string;
 }
 
 export interface AsistenHistory {
@@ -41,8 +43,7 @@ export interface AsistenHistory {
   historyUploadSoal?: HistoryUploadSoal[];
   historyUploadQuestionCard?: HistoryUploadQuestionCard[];
   historyPengumuman?: HistoryPengumuman[];
-  historyPjRuangan?: HistoryRuangan[];
-  historyPenilaiRuangan?: HistoryRuangan[];
+  historyRuangan?: HistoryRuangan[];
 }
 
 export interface DetailAsisten {
@@ -68,6 +69,9 @@ export interface PenilaianItem {
   calasRef: CalasRef;
   nilaiAkhir: number;
   status: string;
+  jenisUjian: string;
+  kriteria: Record<string, number>;
+  deskripsi: string;
   createdAt: string;
 }
 

@@ -94,7 +94,9 @@ export const EvaluationWidget = ({ isLoading }: { isLoading: boolean }) => {
                       <p className="text-xs text-gray-400 mt-1 uppercase">{item.jenisUjian}</p>
                     </div>
                     <Link
-                      to="/lepkom/penilaian"
+                      to={item.jenisUjian.toLowerCase() === 'praktek' 
+                        ? `/lepkom/penugasan/penilaian-praktek/form/${item.examSessionId}/${item.calasRef}` 
+                        : `/lepkom/penugasan/penilaian-project/form/${item.examSessionId}/${item.calasRef}`}
                       className="p-2 text-lepkom-green bg-green-50 hover:bg-lepkom-green hover:text-white rounded-lg transition-colors"
                       title="Mulai Menilai"
                     >

@@ -88,7 +88,8 @@ export const filterPathByRole = (role: UserRole): string[] => {
       path.lepkom.biodata.berkas.default,
       path.lepkom.calasSoal.default,
       path.lepkom.calasSoal.daftarSoal.default,
-      path.lepkom.calasSoal.uploadJawaban.default
+      path.lepkom.calasSoal.uploadJawaban.default,
+      path.lepkom.biodata.hasil.default
     ]
   };
 

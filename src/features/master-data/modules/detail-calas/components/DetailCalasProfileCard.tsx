@@ -2,8 +2,10 @@ import React from 'react';
 import { Card } from '@/components/ui/Card';
 import { Badge } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/Button';
-import { FiDownload, FiFileText, FiMapPin, FiMail, FiPhone, FiUser, FiXCircle } from 'react-icons/fi';
+import { FiDownload, FiFileText, FiMapPin, FiMail, FiPhone, FiUser, FiXCircle, FiBriefcase, FiCode, FiStar, FiUsers, FiAward } from 'react-icons/fi';
+import { toast } from 'react-hot-toast';
 import type { DetailCalas } from '../types/detailCalas.types';
+import { downloadDokumenCalas } from '../api/detailCalas.api';
 
 const getRejectionReason = (alasan?: string) => {
   switch (alasan) {
@@ -37,9 +39,14 @@ const DetailCalasProfileCard: React.FC<Props> = ({ calas }) => {
     return <Badge variant={variant} className="uppercase text-[10px] tracking-wider px-2 py-0.5">Status: {hasil.replace(/_/g, ' ')}</Badge>;
   };
 
-  const renderFileButton = (label: string, fileUrl?: string) => {
-    const handleDownload = () => {
-      if (fileUrl) window.open(fileUrl, '_blank');
+  const renderFileButton = (label: string, jenisDokumen: string, fileUrl?: string) => {
+    const handleDownload = async () => {
+      if (!fileUrl) return;
+      try {
+        await downloadDokumenCalas(calas._id, jenisDokumen);
+      } catch (error) {
+        toast.error('Gagal mengunduh dokumen');
+      }
     };
 
     return (
@@ -73,6 +80,9 @@ const DetailCalasProfileCard: React.FC<Props> = ({ calas }) => {
               <p>NPM: <span className="text-gray-900">{calas.npm}</span></p>
               <p>Kelas: <span className="text-gray-900">{calas.kelas}</span></p>
               <p>Jurusan: <span className="text-gray-900">{calas.jurusan}</span></p>
+              <p>Wilayah: <span className="text-gray-900">{calas.wilayah}</span></p>
+              <p>IPK: <span className="text-gray-900 font-semibold">{calas.ipk ?? '-'}</span></p>
+              <p>Asal Sekolah: <span className="text-gray-900">{calas.asalSekolah || '-'}</span></p>
             </div>
           </div>
           <div className="flex flex-col gap-2 items-end mt-2 sm:mt-0">
@@ -141,6 +151,110 @@ const DetailCalasProfileCard: React.FC<Props> = ({ calas }) => {
               </div>
             </div>
           </div>
+          
+          <h3 className="text-sm font-semibold text-gray-900 mt-6 mb-4 uppercase tracking-wider">Informasi Keluarga</h3>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div className="flex items-start gap-3">
+              <div className="p-2 bg-gray-50 rounded-lg text-gray-500"><FiUsers className="w-4 h-4" /></div>
+              <div>
+                <p className="text-xs text-gray-500 mb-0.5">Nama Ayah</p>
+                <p className="text-sm font-medium text-gray-900">{calas.namaAyah || '-'}</p>
+              </div>
+            </div>
+            <div className="flex items-start gap-3">
+              <div className="p-2 bg-gray-50 rounded-lg text-gray-500"><FiUsers className="w-4 h-4" /></div>
+              <div>
+                <p className="text-xs text-gray-500 mb-0.5">Nama Ibu</p>
+                <p className="text-sm font-medium text-gray-900">{calas.namaIbu || '-'}</p>
+              </div>
+            </div>
+            <div className="flex items-start gap-3">
+              <div className="p-2 bg-gray-50 rounded-lg text-gray-500"><FiPhone className="w-4 h-4" /></div>
+              <div>
+                <p className="text-xs text-gray-500 mb-0.5">No. HP Orang Tua / Wali</p>
+                <p className="text-sm font-medium text-gray-900">{calas.noHpOrtu || '-'}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Riwayat Kursus LEPKOM */}
+        <div className="mt-6 border-t border-gray-100 pt-6">
+          <h3 className="text-sm font-semibold text-gray-900 mb-4 uppercase tracking-wider flex items-center gap-2">
+            <FiAward className="w-4 h-4 text-gray-500" />
+            Riwayat Kursus LEPKOM
+          </h3>
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+            {[1, 2, 3, 4, 5, 6, 7].map((num) => {
+              const courseVal = calas.kursusSemester?.[`semester${num}` as keyof typeof calas.kursusSemester];
+              return (
+                <div key={`sem${num}`} className="bg-white p-3 rounded-lg border border-gray-100 shadow-xs">
+                  <p className="text-xs font-semibold text-gray-500 mb-1">Semester {num}</p>
+                  <p className="text-sm font-medium text-gray-900">{courseVal || '-'}</p>
+                </div>
+              );
+            })}
+          </div>
+          {calas.isKursusDelete && (
+            <div className="mt-4 p-4 bg-orange-50 border border-orange-100 rounded-lg flex items-start gap-3">
+              <div className="p-1.5 bg-orange-100 rounded-md text-orange-600 shrink-0">
+                <FiXCircle className="w-4 h-4" />
+              </div>
+              <div>
+                <p className="text-sm font-semibold text-orange-900 mb-0.5">Terdapat riwayat kursus yang dihapus</p>
+                <p className="text-sm text-orange-700">{calas.SemesterKursusDel}</p>
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* Kualifikasi & Pengalaman */}
+        <div className="mt-6 border-t border-gray-100 pt-6">
+          <h3 className="text-sm font-semibold text-gray-900 mb-4 uppercase tracking-wider flex items-center gap-2">
+            <FiBriefcase className="w-4 h-4 text-gray-500" />
+            Kualifikasi & Pengalaman
+          </h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="bg-gray-50/50 rounded-xl p-4 border border-gray-100">
+              <div className="flex items-center gap-2 mb-2 text-indigo-700 font-medium">
+                <FiStar className="w-4 h-4" />
+                <h4>Kemampuan Pribadi</h4>
+              </div>
+              <p className="text-sm text-gray-700 whitespace-pre-wrap leading-relaxed">
+                {calas.kemampuanPribadi || <span className="text-gray-400 italic">Tidak ada data</span>}
+              </p>
+            </div>
+            
+            <div className="bg-gray-50/50 rounded-xl p-4 border border-gray-100">
+              <div className="flex items-center gap-2 mb-2 text-teal-700 font-medium">
+                <FiCode className="w-4 h-4" />
+                <h4>Kemampuan IT</h4>
+              </div>
+              <p className="text-sm text-gray-700 whitespace-pre-wrap leading-relaxed">
+                {calas.kemampuanIt || <span className="text-gray-400 italic">Tidak ada data</span>}
+              </p>
+            </div>
+
+            <div className="bg-gray-50/50 rounded-xl p-4 border border-gray-100">
+              <div className="flex items-center gap-2 mb-2 text-orange-700 font-medium">
+                <FiUsers className="w-4 h-4" />
+                <h4>Pengalaman Organisasi</h4>
+              </div>
+              <p className="text-sm text-gray-700 whitespace-pre-wrap leading-relaxed">
+                {calas.pengalamanOrganisasi || <span className="text-gray-400 italic">Tidak ada data</span>}
+              </p>
+            </div>
+
+            <div className="bg-gray-50/50 rounded-xl p-4 border border-gray-100">
+              <div className="flex items-center gap-2 mb-2 text-rose-700 font-medium">
+                <FiBriefcase className="w-4 h-4" />
+                <h4>Pengalaman Kerja</h4>
+              </div>
+              <p className="text-sm text-gray-700 whitespace-pre-wrap leading-relaxed">
+                {calas.pengalamanKerja || <span className="text-gray-400 italic">Tidak ada data</span>}
+              </p>
+            </div>
+          </div>
         </div>
 
         {/* Berkas & Dokumen */}
@@ -150,11 +264,11 @@ const DetailCalasProfileCard: React.FC<Props> = ({ calas }) => {
             Berkas Dokumen
           </h3>
           <div className="flex flex-wrap gap-3">
-            {renderFileButton('Unduh CV', calas.cv)}
-            {renderFileButton('Unduh KRS', calas.krs)}
-            {renderFileButton('Unduh Rangkuman Nilai', calas.rangkumanNilai)}
-            {renderFileButton('Unduh Jawaban Praktek', calas.jawabanPraktek)}
-            {renderFileButton('Unduh Jawaban Project', calas.jawabanProject)}
+            {renderFileButton('Unduh CV', 'cv', calas.cv)}
+            {renderFileButton('Unduh KRS', 'krs', calas.krs)}
+            {renderFileButton('Unduh Rangkuman Nilai', 'rangkumanNilai', calas.rangkumanNilai)}
+            {renderFileButton('Unduh Jawaban Praktek', 'jawabanPraktek', calas.jawabanPraktek)}
+            {renderFileButton('Unduh Jawaban Project', 'jawabanProject', calas.jawabanProject)}
           </div>
         </div>
       </div>

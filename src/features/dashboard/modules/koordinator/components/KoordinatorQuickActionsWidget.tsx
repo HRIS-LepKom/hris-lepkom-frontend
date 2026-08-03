@@ -13,7 +13,7 @@ export const KoordinatorQuickActionsWidget = () => {
         <Button 
           variant="outline" 
           className="h-auto flex-col items-center justify-center p-6 gap-3 border-dashed hover:border-lepkom-green hover:text-lepkom-green hover:bg-green-50 transition-all"
-          onClick={() => navigate(path.lepkom.penjadwalan.session.default)}
+          onClick={() => navigate(path.lepkom.masterData.rekrutmen.default)}
         >
           <FiCalendar className="w-8 h-8" />
           <span className="font-medium text-xs text-center">Kelola Sesi</span>
@@ -22,7 +22,7 @@ export const KoordinatorQuickActionsWidget = () => {
         <Button 
           variant="outline" 
           className="h-auto flex-col items-center justify-center p-6 gap-3 border-dashed hover:border-blue-500 hover:text-blue-500 hover:bg-blue-50 transition-all"
-          onClick={() => navigate(path.lepkom.penjadwalan.roomPlacement.default)}
+          onClick={() => navigate(path.lepkom.penugasan?.penempatanRuanganAsisten?.default || '/lepkom/penugasan/penempatan-ruangan-asisten')}
         >
           <FiMap className="w-8 h-8" />
           <span className="font-medium text-xs text-center">Penempatan Ruangan</span>
@@ -30,7 +30,7 @@ export const KoordinatorQuickActionsWidget = () => {
         <Button 
           variant="outline" 
           className="h-auto flex-col items-center justify-center p-6 gap-3 border-dashed hover:border-purple-500 hover:text-purple-500 hover:bg-purple-50 transition-all"
-          onClick={() => navigate(path.lepkom.soal.default)}
+          onClick={() => navigate(path.lepkom.masterData.soal.default)}
         >
           <FiFileText className="w-8 h-8" />
           <span className="font-medium text-xs text-center">Kelola Soal</span>

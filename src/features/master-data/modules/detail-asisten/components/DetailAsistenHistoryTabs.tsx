@@ -73,30 +73,20 @@ const DetailAsistenHistoryTabs: React.FC<Props> = ({ history }) => {
 
       {/* Kolom 2: Ruangan & Pengumuman */}
       <div className="space-y-6">
-        <h3 className="text-lg font-bold text-gray-800 border-b pb-2">Riwayat Ruangan & Pengumuman</h3>
+        <h3 className="text-lg font-bold text-gray-800 border-b pb-2">Riwayat Ruangan</h3>
         
-        {(!history.historyPjRuangan?.length && !history.historyPenilaiRuangan?.length && !history.historyPengumuman?.length) && (
+        {(!history.historyRuangan?.length && !history.historyPengumuman?.length) && (
           <EmptyState message="Belum ada riwayat ruangan atau pengumuman." />
         )}
 
         <div className="space-y-0">
-          {history.historyPjRuangan?.map((p: HistoryRuangan) => (
+          {history.historyRuangan?.map((p: HistoryRuangan) => (
             <TimelineItem 
               key={p._id} 
-              title={`PJ Ruangan ${p.ruangan}`} 
-              desc={`Sesi ${p.examSessionRef.sesi} - ${new Intl.DateTimeFormat('id-ID', { dateStyle: 'medium' }).format(new Date(p.examSessionRef.tanggal))}`} 
+              title={`${p.rolePenugasan} Ruangan ${p.ruangan}`} 
+              desc={`Ujian ${p.jenisUjian?.toUpperCase() || '-'} - ${new Intl.DateTimeFormat('id-ID', { dateStyle: 'medium' }).format(new Date(p.tanggal))}`} 
               date={p.createdAt} 
-              color="bg-indigo-500" 
-            />
-          ))}
-
-          {history.historyPenilaiRuangan?.map((p: HistoryRuangan) => (
-            <TimelineItem 
-              key={p._id} 
-              title={`Penilai Ruangan ${p.ruangan}`} 
-              desc={`Sesi ${p.examSessionRef.sesi} - ${new Intl.DateTimeFormat('id-ID', { dateStyle: 'medium' }).format(new Date(p.examSessionRef.tanggal))}`} 
-              date={p.createdAt} 
-              color="bg-rose-500" 
+              color={p.rolePenugasan.includes('PJ') ? 'bg-indigo-500' : 'bg-rose-500'} 
             />
           ))}
 

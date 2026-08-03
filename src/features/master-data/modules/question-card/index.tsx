@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import ContentLayout from '@/components/layout/ContentLayout/ContentLayout';
 import { useBreadcrumbStore } from '@/hooks/globalStore/useBreadcrumbStore';
 import { Lock } from 'lucide-react';

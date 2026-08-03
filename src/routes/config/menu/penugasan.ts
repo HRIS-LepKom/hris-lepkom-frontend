@@ -48,11 +48,11 @@ export const penugasanMenu = {
     },
     {
       key: 'calasRoomPlacement',
-      label: 'Penempatan Ruangan Asisten',
+      label: 'Penempatan Ruangan Calas',
       path: path.lepkom.penugasan.penempatanRuanganCalas.default,
       description: 'Kelola Penempatan Ruangan Untuk Calas',
       icon: SiGoogleclassroom,
-      role: ['super_admin', 'koordinator_lapangan', 'asisten_penilai', 'penanggung_jawab_ruangan']
+      role: ['super_admin', 'koordinator_lapangan', 'penanggung_jawab_ruangan']
     },
     {
       key: 'historyPenilaian',

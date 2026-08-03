@@ -40,21 +40,23 @@ const FormUpdateProgress = () => {
     e.preventDefault();
     if (!nextStage) return;
 
-    updateTimelineMutation.mutate({
-      id: selectedCalas._id,
-      data: {
-        tahapSaatIni: nextStage,
-        hasil: 'proses', // hasil reset ke proses jika pindah tahap
+    toast.promise(
+      updateTimelineMutation.mutateAsync({
+        id: selectedCalas._id,
+        data: {
+          tahapSaatIni: nextStage,
+          hasil: 'proses',
+        }
+      }),
+      {
+        loading: 'Memperbarui progres rekrutmen...',
+        success: () => {
+          setOpenDialog('defaultDialog', false);
+          return `Berhasil pindah ke tahap ${formatStageName(nextStage)}`;
+        },
+        error: (error: any) => error?.response?.data?.message || 'Gagal mengubah progres calas',
       }
-    }, {
-      onSuccess: () => {
-        toast.success(`Berhasil pindah ke tahap ${formatStageName(nextStage)}`);
-        setOpenDialog('defaultDialog', false);
-      },
-      onError: (error: any) => {
-        toast.error(error?.response?.data?.message || 'Gagal mengubah progres calas');
-      }
-    });
+    ).catch(() => {}); // Catch error to prevent unhandled promise rejection in console
   };
 
   if (!nextStage) {

@@ -3,6 +3,8 @@ import { useBreadcrumbStore } from "@/hooks/globalStore";
 import { path } from "@/utils/consts";
 import { useEffect } from "react";
 import HeaderContent from "./components/HeaderContent";
+import RiwayatPenilaianFilter from "./components/RiwayatPenilaianFilter";
+import RiwayatPenilaianList from "./components/RiwayatPenilaianList";
 
 const RiwayatPenilaianPage = () => {
   const { setBreadcrumbItems } = useBreadcrumbStore();
@@ -20,6 +22,8 @@ const RiwayatPenilaianPage = () => {
     <ContentLayout>
       <div className="flex flex-col gap-6">
         <HeaderContent />
+        <RiwayatPenilaianFilter />
+        <RiwayatPenilaianList />
       </div>
     </ContentLayout>
   );

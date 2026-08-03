@@ -4,7 +4,7 @@ import toast from 'react-hot-toast';
 import { Input } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
 import { useRequestHardReset } from '../api/resetPassword.api';
-import { FiMail, FiArrowLeft, FiCheckCircle } from 'react-icons/fi';
+import { FiArrowLeft, FiCheckCircle } from 'react-icons/fi';
 import { AuthLayout } from '@/features/auth/modules/login/components/AuthLayout';
 
 const RequestResetPage = () => {

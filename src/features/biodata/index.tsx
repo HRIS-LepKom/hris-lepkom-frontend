@@ -21,7 +21,6 @@ const BiodataCalasDashboard = () => {
     return () => setBreadcrumbItems([]);
   }, [setBreadcrumbItems]);
 
-  // Filter menus based on user role
   const allowedMenus = biodataMenu.children.filter((menu) => {
     if (!role) return false;
     return menu.role.includes(role);
@@ -31,8 +30,8 @@ const BiodataCalasDashboard = () => {
     <ContentLayout>
       <div className="space-y-6">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Menu Soal & Upload Jawaban</h1>
-          <p className="text-gray-500 mt-1">Download & Upload Jawaban Anda</p>
+          <h1 className="text-2xl font-bold text-gray-900">Data Diri Pengguna</h1>
+          <p className="text-gray-500 mt-1">Menu Data Diri Pengguna</p>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
