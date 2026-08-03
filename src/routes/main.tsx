@@ -20,7 +20,6 @@ import {
 
 import {
   dashboardMenu,
-  pengumumanMenu,
   masterDataMenu,
   biodataMenu,
   calasSoalMenu,
@@ -29,7 +28,6 @@ import {
 
 export const mainMenus = [
   dashboardMenu,
-  pengumumanMenu,
   masterDataMenu,
   biodataMenu,
   calasSoalMenu,

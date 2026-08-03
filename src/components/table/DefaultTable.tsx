@@ -101,19 +101,33 @@ const DefaultTable: React.FC<DefaultTableProps> = ({
         minSize,
       } = col;
 
-      return columnHelper.accessor(accessor, {
-        id: id || accessor,
+      if (accessor) {
+        return columnHelper.accessor(accessor, {
+          id: id || accessor,
+          header: renderHeader || (() => title),
+          cell: renderCell || ((info) => info.getValue()),
+          enableSorting: !!sorting,
+          enableColumnFilter: !!isSearch,
+          filterFn: col.filterFn,
+          size,
+          minSize,
+          meta: {
+            title,
+            isSearch: !!isSearch,
+            filterOptions: col.filterOptions,
+            sticky,
+          },
+        });
+      }
+
+      return columnHelper.display({
+        id: id as string,
         header: renderHeader || (() => title),
-        cell: renderCell || ((info) => info.getValue()),
-        enableSorting: !!sorting,
-        enableColumnFilter: !!isSearch,
-        filterFn: col.filterFn,
+        cell: renderCell,
         size,
         minSize,
         meta: {
           title,
-          isSearch: !!isSearch,
-          filterOptions: col.filterOptions,
           sticky,
         },
       });

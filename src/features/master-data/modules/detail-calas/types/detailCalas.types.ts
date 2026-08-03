@@ -45,10 +45,30 @@ export interface DetailCalas {
   tempatLahir: string;
   tanggalLahir: string;
   alamatLengkap: string;
+  wilayah: string;
   agama: string;
+  ipk: number;
+  asalSekolah: string;
+  namaIbu: string;
+  namaAyah: string;
+  noHpOrtu: string;
+  kursusSemester?: {
+    semester1?: string | null;
+    semester2?: string | null;
+    semester3?: string | null;
+    semester4?: string | null;
+    semester5?: string | null;
+    semester6?: string | null;
+    semester7?: string | null;
+  };
+  isKursusDelete?: boolean;
+  SemesterKursusDel?: string;
+
   statusRekrutmen: {
     tahapSaatIni: string;
     hasil: string;
+    alasanTidakLolos?: string;
+    deskripsiPenolakan?: string;
   };
   skorAkhirNilai: number | null;
   // Files
@@ -57,6 +77,11 @@ export interface DetailCalas {
   rangkumanNilai?: string;
   jawabanPraktek?: string;
   jawabanProject?: string;
+  // Abilities & Experience
+  kemampuanPribadi?: string;
+  kemampuanIt?: string;
+  pengalamanOrganisasi?: string;
+  pengalamanKerja?: string;
   // Placements & Assessments
   penempatanRuangan: RoomPlacementItem[];
   ringkasanPenilaian: RingkasanPenilaian;

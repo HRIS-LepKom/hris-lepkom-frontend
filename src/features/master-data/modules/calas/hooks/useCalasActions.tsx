@@ -1,4 +1,4 @@
-import React from 'react';
+
 import { useDialogStore } from '@/hooks/globalStore/useDialogStore';
 import { useCalasStore } from '../store/useCalasStore';
 import { useResetCalasPassword, useSendBiodataEmail, useAcceptCalas } from '../api/calas.api';
@@ -128,16 +128,20 @@ export const useCalasActions = () => {
       },
       btnFalse: { text: 'Batal' },
       onTrueCallback: () => {
-        acceptMutation.mutate(row._id, {
-          onSuccess: (res) => {
-            toast.success((res as any).message || `Berhasil menerima ${row.namaCalas}`);
-            resetAlert();
-          },
-          onError: (error: any) => {
-            toast.error(error?.response?.data?.message || 'Gagal menerima calas');
-            resetAlert();
+        toast.promise(
+          acceptMutation.mutateAsync(row._id),
+          {
+            loading: `Memproses penerimaan ${row.namaCalas}...`,
+            success: (res: any) => {
+              resetAlert();
+              return res?.message || `Berhasil menerima ${row.namaCalas}`;
+            },
+            error: (error: any) => {
+              resetAlert();
+              return error?.response?.data?.message || 'Gagal menerima calas';
+            }
           }
-        });
+        ).catch(() => {});
       },
       onFalseCallback: () => resetAlert(),
       onCloseCallback: () => resetAlert(),
@@ -207,16 +211,20 @@ export const useCalasActions = () => {
       },
       btnFalse: { text: 'Batal' },
       onTrueCallback: () => {
-        sendEmailMutation.mutate(row._id, {
-          onSuccess: (res) => {
-            toast.success((res as any).message || 'Email registrasi berhasil dikirim');
-            resetAlert();
-          },
-          onError: (error: any) => {
-            toast.error(error?.response?.data?.message || 'Gagal mengirim email registrasi');
-            resetAlert();
+        toast.promise(
+          sendEmailMutation.mutateAsync(row._id),
+          {
+            loading: 'Mengirim email registrasi...',
+            success: (res: any) => {
+              resetAlert();
+              return res?.message || 'Email registrasi berhasil dikirim';
+            },
+            error: (error: any) => {
+              resetAlert();
+              return error?.response?.data?.message || 'Gagal mengirim email registrasi';
+            }
           }
-        });
+        ).catch(() => {});
       },
       onFalseCallback: () => resetAlert(),
       onCloseCallback: () => resetAlert(),

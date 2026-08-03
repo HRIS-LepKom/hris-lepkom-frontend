@@ -15,7 +15,7 @@ const PenugasanDashboard = () => {
   useEffect(() => {
     setBreadcrumbItems([
       { label: 'Dashboard', path: path.lepkom.dashboard.default },
-      { label: 'Menu Penugasan', path: path.lepkom.penugasan.default },
+      { label: 'Penugasan', path: path.lepkom.penugasan.default },
     ]);
     return () => setBreadcrumbItems([]);
   }, [setBreadcrumbItems]);

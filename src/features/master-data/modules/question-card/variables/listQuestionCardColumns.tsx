@@ -50,14 +50,14 @@ export const getListQuestionCardColumns = (
       renderCell: (info: any) => {
         const val = info.getValue() as string;
         if (!val) return <EmptyCellText />;
-        const colorMap: Record<string, 'info' | 'success' | 'warning' | 'primary'> = {
-          materi: 'primary',
+        const colorMap: Record<string, 'info' | 'success' | 'warning' | 'default'> = {
+          materi: 'default',
           teknis: 'info',
           kepribadian: 'warning',
           motivasi: 'success',
         };
         return (
-          <Badge variant={colorMap[val] || 'primary'} className="capitalize">
+          <Badge variant={colorMap[val] || 'default'} className="capitalize">
             {val}
           </Badge>
         );

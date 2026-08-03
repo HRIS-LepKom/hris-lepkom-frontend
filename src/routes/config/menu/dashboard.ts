@@ -10,10 +10,3 @@ export const dashboardMenu = {
   role: ['super_admin', 'koordinator_lapangan', 'penanggung_jawab_ruangan', 'asisten_penilai', 'pj_soal_materi', 'asisten', 'calas'],
 };
 
-export const pengumumanMenu = {
-  label: 'Pengumuman',
-  icon: HiSpeakerphone,
-  path: path.lepkom.dashboard.pengumuman.default,
-  type: 'dashboard',
-  role: ['super_admin', 'koordinator_lapangan', 'penanggung_jawab_ruangan', 'asisten_penilai', 'pj_soal_materi', 'asisten', 'calas']
-};

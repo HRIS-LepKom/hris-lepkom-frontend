@@ -4,7 +4,6 @@ import { FiEdit2, FiTrash2, FiDownload, FiEye, FiEyeOff } from 'react-icons/fi';
 import type { Soal } from '../api/soal.api';
 import { downloadSoalFile } from '../api/soal.api';
 import { EmptyCellText } from '@/components/shared/EmptyCellText';
-import { path } from '@/utils/consts';
 import toast from 'react-hot-toast';
 
 export const getListSoalColumns = (

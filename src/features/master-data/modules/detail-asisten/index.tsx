@@ -3,7 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { useGetDetailAsisten } from './api/detailAsisten.api';
 import DetailAsistenProfileCard from './components/DetailAsistenProfileCard';
 import DetailAsistenHistoryTabs from './components/DetailAsistenHistoryTabs';
-import DetailAsistenPenilaianTable from './components/DetailAsistenPenilaianTable';
+import DetailAsistenPenilaianList from './components/DetailAsistenPenilaianList';
 import { useDetailAsistenStore } from './store/useDetailAsistenStore';
 import { Button } from '@/components/ui/Button';
 import { path } from '@/utils/consts';
@@ -88,7 +88,7 @@ const DetailAsistenPage: React.FC = () => {
         {/* Tab Content */}
         <div className="mt-6">
           {activeTab === 'content' && <DetailAsistenHistoryTabs history={asisten.history || {}} />}
-          {activeTab === 'penilaian' && <DetailAsistenPenilaianTable asistenId={asisten._id} />}
+          {activeTab === 'penilaian' && <DetailAsistenPenilaianList asistenId={asisten._id} />}
         </div>
       </div>
     </ContentLayout>
