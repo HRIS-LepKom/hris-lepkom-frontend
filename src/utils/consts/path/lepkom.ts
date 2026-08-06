@@ -4,7 +4,8 @@ import {
   dashboardPaths,
   profilePaths,
   calasSoalPaths,
-  penugasanPaths
+  penugasanPaths,
+  jadwalPaths,
 } from './features';
 
 export const lepkomPaths = {
@@ -14,5 +15,6 @@ export const lepkomPaths = {
   dashboard: dashboardPaths,
   profile: profilePaths,
   calasSoal : calasSoalPaths,
-  penugasan : penugasanPaths
+  penugasan : penugasanPaths,
+  jadwal : jadwalPaths
 };
