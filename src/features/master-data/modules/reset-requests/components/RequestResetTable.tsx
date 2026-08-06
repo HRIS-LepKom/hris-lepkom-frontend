@@ -31,7 +31,7 @@ const RequestResetTable = () => {
   }
 
   columnFilters.forEach((filter) => {
-    if (filter.id === 'global_search' || filter.id === 'inputAwal') {
+    if (filter.id === 'global_search' || filter.id === 'search') {
       queryParams.set('search', filter.value);
     } else {
       queryParams.set(filter.id, filter.value);
