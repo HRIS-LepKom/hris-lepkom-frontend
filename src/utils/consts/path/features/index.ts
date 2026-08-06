@@ -5,3 +5,4 @@ export * from './dashboard';
 export * from './profile';
 export * from './soal-calas'
 export * from './penugasan'
+export * from './jadwal'

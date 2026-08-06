@@ -15,7 +15,8 @@ import {
   masterDataRoute,
   biodataRoute,
   calasSoalRoute,
-  penugasanRoute
+  penugasanRoute,
+  jadwalRoute
 } from './config/route';
 
 import {
@@ -23,7 +24,8 @@ import {
   masterDataMenu,
   biodataMenu,
   calasSoalMenu,
-  penugasanMenu
+  penugasanMenu,
+  jadwalMenu
 } from './config/menu';
 
 export const mainMenus = [
@@ -31,7 +33,8 @@ export const mainMenus = [
   masterDataMenu,
   biodataMenu,
   calasSoalMenu,
-  penugasanMenu
+  penugasanMenu,
+  jadwalMenu
 ];
 
 export const mainRoutes = createBrowserRouter(
@@ -54,6 +57,7 @@ export const mainRoutes = createBrowserRouter(
         ...biodataRoute,
         ...calasSoalRoute,
         ...penugasanRoute,
+        ...jadwalRoute,
         {
           path: '/not-permitted',
           element: <ErrorPermission />
