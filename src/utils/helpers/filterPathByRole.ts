@@ -20,7 +20,10 @@ export const filterPathByRole = (role: UserRole): string[] => {
       path.lepkom.masterData.questionCard.default,
       path.lepkom.calasSoal.default,
       path.lepkom.calasSoal.daftarSoal.default,
-      path.lepkom.calasSoal.uploadJawaban.default
+      path.lepkom.calasSoal.uploadJawaban.default,
+      path.lepkom.jadwal.default,
+      path.lepkom.jadwal.jadwalKosong.default,
+      path.lepkom.jadwal.jadwalKosong.detail,
     ],
     penanggung_jawab_ruangan: [
       path.lepkom.dashboard.default,
@@ -35,6 +38,9 @@ export const filterPathByRole = (role: UserRole): string[] => {
       path.lepkom.penugasan.penempatanRuanganAsisten.default,
       path.lepkom.penugasan.penempatanRuanganCalas.default,
       path.lepkom.penugasan.historyPenilaian.default,
+      path.lepkom.jadwal.default,
+      path.lepkom.jadwal.jadwalKosong.default,
+      path.lepkom.jadwal.jadwalKosong.detail,
     ],
     koordinator_lapangan: [
       path.lepkom.dashboard.default,
@@ -48,7 +54,10 @@ export const filterPathByRole = (role: UserRole): string[] => {
       path.lepkom.penugasan.penempatanRuanganCalas.default,
       path.lepkom.masterData.materi.default,
       path.lepkom.masterData.questionCard.default,
-      path.lepkom.masterData.calas.default, 
+      path.lepkom.masterData.calas.default,
+      path.lepkom.jadwal.default,
+      path.lepkom.jadwal.jadwalKosong.default,
+      path.lepkom.jadwal.jadwalKosong.detail,
     ],
     asisten_penilai: [
       path.lepkom.dashboard.default,
@@ -64,13 +73,18 @@ export const filterPathByRole = (role: UserRole): string[] => {
       path.lepkom.penugasan.project.default,
       path.lepkom.penugasan.project.form,
       path.lepkom.penugasan.checkUploadJawaban.default,
-
+      path.lepkom.jadwal.default,
+      path.lepkom.jadwal.jadwalKosong.default,
+      path.lepkom.jadwal.jadwalKosong.detail,
     ],
     asisten: [
       path.lepkom.masterData.materi.default,
       path.lepkom.dashboard.default,
       path.lepkom.masterData.asisten.default,
       path.lepkom.masterData.asisten.detailAsisten,
+      path.lepkom.jadwal.default,
+      path.lepkom.jadwal.jadwalKosong.default,
+      path.lepkom.jadwal.jadwalKosong.detail,
     ],
     staff: [
       path.lepkom.masterData.materi.default,
@@ -78,6 +92,9 @@ export const filterPathByRole = (role: UserRole): string[] => {
       path.lepkom.dashboard.default,
       path.lepkom.masterData.asisten.default,
       path.lepkom.masterData.asisten.detailAsisten,
+      path.lepkom.jadwal.default,
+      path.lepkom.jadwal.jadwalKosong.default,
+      path.lepkom.jadwal.jadwalKosong.detail,
     ],
     calas: [
       path.lepkom.dashboard.default,

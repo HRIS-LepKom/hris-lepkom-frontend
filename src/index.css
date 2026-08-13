@@ -15,7 +15,11 @@
     --status-yellow: #F59E0B;
     --status-red: #EF4444;
   }
-  
+
+  html {
+    scroll-behavior: smooth;
+  }
+
   /* Menerapkan font dan warna latar utama ke body */
   * {
     @apply border-border;
@@ -102,5 +106,14 @@ select:disabled {
   .scrollbar-hide {
     -ms-overflow-style: none;
     scrollbar-width: none;
+  }
+
+  /* Marquee berjalan terus untuk ticker jadwal di hero */
+  @keyframes marquee {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
+  .animate-marquee {
+    animation: marquee 28s linear infinite;
   }
 }

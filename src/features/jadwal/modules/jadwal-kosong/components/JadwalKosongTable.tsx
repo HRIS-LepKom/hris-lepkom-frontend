@@ -1,13 +1,22 @@
 import { useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Card } from '@/components/ui/Card';
 import DefaultTable from '@/components/table/DefaultTable';
 import PaginationPage from '@/components/pagination/PaginationPage';
 import useTableFiltersSortUrlSync from '@/hooks/shared/useTableFiltersSortUrlSync';
 import { path } from '@/utils/consts';
-import { useGetAllHardResetRequests } from '../api/requestReset.api';
-import { useListRequestResetColumns } from '../variables/listRequestResetColumns';
+import { useAuthStore } from '@/features/auth/shared/store';
+import { useGetJadwalKosong } from '../api/jadwalKosong.api';
+import { getJadwalKosongColumns } from '../variables/listJadwalKosongColumns';
+import { useJadwalKosongActions } from '../hooks/useJadwalKosongActions';
 
-const RequestResetTable = () => {
+const DETAIL_PATH = path.lepkom.jadwal.jadwalKosong.detail || '/lepkom/jadwal/jadwal-kosong/detail';
+
+export const JadwalKosongTable = () => {
+  const navigate = useNavigate();
+  const { user } = useAuthStore();
+  const isAllowedToManage = user?.role === 'super_admin' || user?.role === 'pj_jadwal';
+
   const {
     columnFilters,
     setColumnFilters,
@@ -15,10 +24,17 @@ const RequestResetTable = () => {
     setState,
     pageSize,
     currentPage,
-  } = useTableFiltersSortUrlSync({ listUrlBase: path.lepkom.masterData.default + '/reset-requests' });
+  } = useTableFiltersSortUrlSync({ listUrlBase: path.lepkom.jadwal.jadwalKosong.default });
 
-  const actionsColumns = useListRequestResetColumns(currentPage, pageSize);
-  const columns = useMemo(() => actionsColumns, [actionsColumns, currentPage, pageSize]);
+  const actions = useJadwalKosongActions();
+
+  const columns = useMemo(
+    () => getJadwalKosongColumns({
+      handleEdit: actions.openEditModal,
+      handleDetail: (row) => navigate(`${DETAIL_PATH}?id=${row._id}`),
+    }, currentPage, pageSize, isAllowedToManage),
+    [actions, currentPage, pageSize, isAllowedToManage, navigate]
+  );
 
   const queryParams = new URLSearchParams();
   queryParams.set('page', String(currentPage));
@@ -31,7 +47,7 @@ const RequestResetTable = () => {
   }
 
   columnFilters.forEach((filter) => {
-    if (filter.id === 'global_search' || filter.id === 'search') {
+    if (filter.id === 'global_search' || filter.id === 'judul') {
       queryParams.set('search', filter.value);
     } else {
       queryParams.set(filter.id, filter.value);
@@ -40,16 +56,16 @@ const RequestResetTable = () => {
 
   const queryString = `?${queryParams.toString()}`;
 
-  const { data, isLoading, isError, error } = useGetAllHardResetRequests(queryString);
+  const { data, isLoading, isError, error } = useGetJadwalKosong(queryString);
 
-  const errorMsg = error ? (error as any)?.response?.data?.message || 'Gagal memuat data request reset password' : '';
+  const errorMsg = error ? (error as any)?.response?.data?.message || 'Gagal memuat data jadwal kosong' : '';
 
   return (
     <Card className="flex flex-col gap-4">
       <DefaultTable
-        title="Daftar Permintaan Reset Password"
+        title="Daftar Jadwal Kosong"
         data={data?.data || []}
-        columnDefs={columns}
+        columnDefs={columns as any}
         columnFilters={columnFilters}
         setColumnFilters={setColumnFilters}
         sort={sort}
@@ -59,8 +75,8 @@ const RequestResetTable = () => {
         isError={isError}
         errorMsg={errorMsg}
         emptyState={{
-          title: 'Tidak ada permintaan reset',
-          subTitle: 'Saat ini belum ada permintaan reset password dari asisten.'
+          title: 'Data tidak ditemukan',
+          subTitle: 'Belum ada jadwal kosong yang ditambahkan.'
         }}
       />
       
@@ -74,5 +90,3 @@ const RequestResetTable = () => {
     </Card>
   );
 };
-
-export default RequestResetTable;
