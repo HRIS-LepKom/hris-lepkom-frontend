@@ -1,7 +1,11 @@
 import React from 'react';
 import { Navbar } from './components/Navbar';
 import { HeroSection } from './components/HeroSection';
-import { FeaturesSection } from './components/FeaturesSection';
+import { AboutSection } from './components/AboutSection';
+import { TimelineSection } from './components/TimelineSection';
+import { StagesSection } from './components/StagesSection';
+import { FaqSection } from './components/FaqSection';
+import { ContactSection } from './components/ContactSection';
 import { Footer } from './components/Footer';
 
 const LandingPage: React.FC = () => {
@@ -10,7 +14,11 @@ const LandingPage: React.FC = () => {
       <Navbar />
       <main className="flex-grow">
         <HeroSection />
-        <FeaturesSection />
+        <AboutSection />
+        <TimelineSection />
+        <StagesSection />
+        <FaqSection />
+        <ContactSection />
       </main>
       <Footer />
     </div>
