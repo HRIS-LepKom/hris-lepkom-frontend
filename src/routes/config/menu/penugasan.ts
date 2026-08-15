@@ -32,7 +32,7 @@ export const penugasanMenu = {
     },
     {
       key: 'chekcUploadJawaban',
-      label: 'Check Uploada Jawaban Calas',
+      label: 'Check Upload Jawaban Calas',
       path: path.lepkom.penugasan.checkUploadJawaban.default,
       description: 'Lihat Calas Upload Jawaban',
       icon: MdDriveFolderUpload,

@@ -1,11 +1,43 @@
 import { Card } from '@/components/ui/Card';
 import { usePenilaiDashboardStore } from '../../../shared/store';
 import { FiCheckCircle, FiEdit3 } from 'react-icons/fi';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { PenilaiQuickActionsWidget } from './PenilaiQuickActionsWidget';
+import { usePenilaianPraktekStore } from '../../../../penugasan/modules/penilaian-praktek/store/usePenilaianPraktekStore';
+import { usePenilaianProjectStore } from '../../../../penugasan/modules/penilaian-project/store/usePenilaianProjectStore';
 
 export const EvaluationWidget = ({ isLoading }: { isLoading: boolean }) => {
+  const navigate = useNavigate();
   const data = usePenilaiDashboardStore(state => state.penilaiStats);
+  const setSelectedPraktek = usePenilaianPraktekStore(state => state.setSelectedCalas);
+  const setSelectedProject = usePenilaianProjectStore(state => state.setSelectedCalas);
+
+  const handleMulaiMenilai = (item: any) => {
+    const isPraktek = item.jenisUjian.toLowerCase() === 'praktek';
+    const calas = {
+      _id: item.calasRef,
+      idCalas: item.calasId,   // CLJ code
+      namaCalas: item.namaCalas,
+      npm: item.npm,
+      kelas: item.kelas,
+      jurusan: item.jurusan,
+      ipk: item.ipk,
+      asalSekolah: item.asalSekolah,
+      wilayah: item.wilayah,
+      examSessionId: item.examSessionId,
+    };
+    if (isPraktek) {
+      setSelectedPraktek(calas as any);
+      navigate(`/lepkom/penugasan/penilaian-praktek/form/${item.examSessionId}/${item.calasRef}`, {
+        state: { calas },
+      });
+    } else {
+      setSelectedProject(calas as any);
+      navigate(`/lepkom/penugasan/penilaian-project/form/${item.examSessionId}/${item.calasRef}`, {
+        state: { calas },
+      });
+    }
+  };
 
   if (isLoading) {
     return (
@@ -93,15 +125,14 @@ export const EvaluationWidget = ({ isLoading }: { isLoading: boolean }) => {
                       </span>
                       <p className="text-xs text-gray-400 mt-1 uppercase">{item.jenisUjian}</p>
                     </div>
-                    <Link
-                      to={item.jenisUjian.toLowerCase() === 'praktek' 
-                        ? `/lepkom/penugasan/penilaian-praktek/form/${item.examSessionId}/${item.calasRef}` 
-                        : `/lepkom/penugasan/penilaian-project/form/${item.examSessionId}/${item.calasRef}`}
+                    <button
+                      type="button"
+                      onClick={() => handleMulaiMenilai(item)}
                       className="p-2 text-lepkom-green bg-green-50 hover:bg-lepkom-green hover:text-white rounded-lg transition-colors"
                       title="Mulai Menilai"
                     >
                       <FiEdit3 className="w-5 h-5" />
-                    </Link>
+                    </button>
                   </div>
                 </div>
               ))}
