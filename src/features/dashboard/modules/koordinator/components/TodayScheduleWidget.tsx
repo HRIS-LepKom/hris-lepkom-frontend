@@ -1,6 +1,6 @@
 import { Card } from '@/components/ui/Card';
 import { useKoordinatorDashboardStore } from '../../../shared/store';
-import { KoordinatorQuickActionsWidget } from './KoordinatorQuickActionsWidget';
+import { RoleQuickActionsWidget } from '../../../shared/components/RoleQuickActionsWidget';
 import { FiClock, FiUsers, FiMapPin } from 'react-icons/fi';
 import dayjs from 'dayjs';
 import 'dayjs/locale/id';
@@ -82,7 +82,7 @@ export const TodayScheduleWidget = ({ isLoading }: { isLoading: boolean }) => {
           </div>
         </Card>
 
-        <KoordinatorQuickActionsWidget />
+        <RoleQuickActionsWidget />
       </div>
     </div>
   );
