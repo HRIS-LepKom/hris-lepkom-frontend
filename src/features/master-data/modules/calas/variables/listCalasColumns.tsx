@@ -180,6 +180,13 @@ export const getListCalasColumns = (actions: {
       }
     },
     {
+      accessorKey: 'idCalas',
+      title: 'ID Calas',
+      sorting: true,
+      isSearch: true,
+      renderCell: (info: any) => info.getValue() || '-'
+    },
+    {
       accessorKey: 'npm',
       title: 'NPM',
       sorting: true,

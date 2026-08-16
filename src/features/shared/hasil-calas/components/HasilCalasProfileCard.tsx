@@ -77,10 +77,11 @@ const HasilCalasProfileCard: React.FC<Props> = ({ calas }) => {
               {calas.namaCalas}
             </h1>
             <div className="text-sm font-medium text-gray-500 mt-3 space-y-1">
+              <p>ID Calas: <span className="text-gray-900">{calas.idCalas || '-'}</span></p>
               <p>NPM: <span className="text-gray-900">{calas.npm}</span></p>
               <p>Kelas: <span className="text-gray-900">{calas.kelas}</span></p>
               <p>Jurusan: <span className="text-gray-900">{calas.jurusan}</span></p>
-              <p>Wilayah: <span className="text-gray-900">{calas.wilayah}</span></p>
+              <p>Wilayah: <span className="text-gray-900">{calas.wilayah || '-'}</span></p>
               <p>IPK: <span className="text-gray-900 font-semibold">{calas.ipk ?? '-'}</span></p>
               <p>Asal Sekolah: <span className="text-gray-900">{calas.asalSekolah || '-'}</span></p>
             </div>
