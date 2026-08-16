@@ -3,6 +3,7 @@ import SuperAdminDashboard from './modules/super-admin';
 import KoordinatorDashboard from './modules/koordinator';
 import PenilaiDashboard from './modules/asisten-penilai';
 import CalasDashboard from './modules/calas';
+import { RoleQuickActionsWidget } from './shared/components/RoleQuickActionsWidget';
 import { ContentLayout } from '@/components/layout';
 
 const DashboardPage = () => {
@@ -43,12 +44,17 @@ const DashboardPage = () => {
   // Fallback for asisten/staff or unknown roles
   return (
     <ContentLayout>
-      <div className="flex flex-col items-center justify-center py-20 text-center">
-        <div className="mb-4 text-4xl text-lepkom-green">👋</div>
-        <h1 className="text-2xl font-bold text-gray-800">Selamat Datang di HRIS LepKOM!</h1>
-        <p className="mt-2 max-w-md text-gray-500">
-          Saat ini belum ada tugas spesifik untuk peran Anda. Silakan hubungi Koordinator Lapangan jika ada pertanyaan.
-        </p>
+      <div className="space-y-6">
+        <div className="flex flex-col items-center justify-center py-12 text-center bg-white rounded-xl border border-gray-100 p-8 shadow-sm">
+          <div className="mb-4 text-4xl text-lepkom-green">👋</div>
+          <h1 className="text-2xl font-bold text-gray-800">Selamat Datang di HRIS LepKOM!</h1>
+          <p className="mt-2 max-w-md text-gray-500 text-sm">
+            Gunakan jalan pintas di bawah ini untuk mengakses fitur-fitur yang tersedia untuk peran Anda.
+          </p>
+        </div>
+        <div className="max-w-xl mx-auto">
+          <RoleQuickActionsWidget />
+        </div>
       </div>
     </ContentLayout>
   );

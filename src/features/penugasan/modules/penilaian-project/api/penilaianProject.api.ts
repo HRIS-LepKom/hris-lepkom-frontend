@@ -10,6 +10,9 @@ export interface CalasToScore {
   npm: string;
   kelas: string;
   jurusan: string;
+  ipk?: number;
+  asalSekolah?: string;
+  wilayah?: string;
   examSessionId: string;
 }
 

@@ -4,13 +4,17 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useParams, useLocation, useNavigate } from 'react-router-dom';
 import { useSubmitPenilaianProject } from '../api/penilaianProject.api';
 import { Button } from '@/components/ui/Button';
-import { Card } from '@/components/ui/Card';
 import ContentLayout from '@/components/layout/ContentLayout/ContentLayout';
 import { useBreadcrumbStore } from '@/hooks/globalStore/useBreadcrumbStore';
 import { useEffect } from 'react';
 import { path } from '@/utils/consts';
-import { FiSave, FiArrowLeft, FiUser } from 'react-icons/fi';
+import { FiArrowLeft, FiSave } from 'react-icons/fi';
+import { usePenilaianProjectStore } from '../../penilaian-project/store/usePenilaianProjectStore';
+import { useGetDetailCalas } from '@/features/master-data/modules/detail-calas/api/detailCalas.api';
 import { toast } from 'react-hot-toast';
+import { RubricScaleCard } from '../../../shared/components/RubricScaleCard';
+import { CalasInfoCard } from '../../../shared/components/CalasInfoCard';
+import { PROJECT_CRITERIA_SECTIONS, getScoreGrade } from '../../../shared/constants/rubric';
 
 const schema = z.object({
   penguasaan: z.number().min(0).max(100),
@@ -24,21 +28,36 @@ const schema = z.object({
   deskripsi: z.string().min(5, 'Deskripsi minimal 5 karakter'),
 });
 
+type FormValues = z.infer<typeof schema>;
+
+const SECTION_TITLES = [
+  {
+    title: 'A. Project',
+    subtitle: 'Penguasaan, kreativitas, kontribusi, dan presentasi project mandiri calas.',
+  },
+  {
+    title: 'B. Personal',
+    subtitle: 'Motivasi, kemampuan interpersonal, integritas, dan potensi berkembang calas.',
+  },
+];
+
 const FormProject = () => {
   const { examSessionId, calasId } = useParams();
   const location = useLocation();
   const navigate = useNavigate();
   const { setBreadcrumbItems } = useBreadcrumbStore();
   const submitMutation = useSubmitPenilaianProject();
+  const storeCalas = usePenilaianProjectStore((state) => state.selectedCalas);
 
-  const calas = location.state?.calas;
+  // Fetch calas detail to ensure complete data from database
+  const { data: detailData, isLoading: isDetailLoading } = useGetDetailCalas(calasId || '');
+  const calas = (detailData as any) ?? location.state?.calas ?? storeCalas;
 
   useEffect(() => {
     setBreadcrumbItems([
       { label: 'Dashboard', path: path.lepkom.dashboard.default },
-      { label: 'Penugasan', path: path.lepkom.penugasan.default },
       { label: 'Penilaian Project', path: path.lepkom.penugasan.project.default },
-      { label: 'Form Penilaian Project', path: '#' },
+      { label: 'Form Penilaian', path: '#' },
     ]);
     return () => setBreadcrumbItems([]);
   }, [setBreadcrumbItems]);
@@ -48,7 +67,7 @@ const FormProject = () => {
     handleSubmit,
     watch,
     formState: { errors },
-  } = useForm({
+  } = useForm<FormValues>({
     resolver: zodResolver(schema),
     defaultValues: {
       penguasaan: 0,
@@ -64,16 +83,18 @@ const FormProject = () => {
   });
 
   const watchValues = watch();
-  const totalScore = (
-    (Number(watchValues.penguasaan) || 0) +
-    (Number(watchValues.kreatifitas) || 0) +
-    (Number(watchValues.kontribusi) || 0) +
-    (Number(watchValues.presentasi) || 0) +
-    (Number(watchValues.motivasi) || 0) +
-    (Number(watchValues.interpersonal) || 0) +
-    (Number(watchValues.integritas) || 0) +
-    (Number(watchValues.potensi) || 0)
-  ) / 8;
+  const totalScore =
+    ((Number(watchValues.penguasaan) || 0) +
+      (Number(watchValues.kreatifitas) || 0) +
+      (Number(watchValues.kontribusi) || 0) +
+      (Number(watchValues.presentasi) || 0) +
+      (Number(watchValues.motivasi) || 0) +
+      (Number(watchValues.interpersonal) || 0) +
+      (Number(watchValues.integritas) || 0) +
+      (Number(watchValues.potensi) || 0)) /
+    8;
+
+  const currentGrade = getScoreGrade(totalScore);
 
   const handleScoreInput = (value: string, onChange: (val: number | string) => void) => {
     if (value === '') return onChange('');
@@ -84,154 +105,228 @@ const FormProject = () => {
     onChange(num);
   };
 
-  const onSubmit = (data: any) => {
+  const onSubmit = (data: FormValues) => {
     if (!examSessionId || !calasId) {
       toast.error('Data parameter tidak lengkap!');
       return;
     }
-
-    submitMutation.mutate({
-      calasId,
-      examSessionId,
-      deskripsi: data.deskripsi,
-      kriteria: {
-        penguasaan: Number(data.penguasaan),
-        kreatifitas: Number(data.kreatifitas),
-        kontribusi: Number(data.kontribusi),
-        presentasi: Number(data.presentasi),
-        motivasi: Number(data.motivasi),
-        interpersonal: Number(data.interpersonal),
-        integritas: Number(data.integritas),
-        potensi: Number(data.potensi),
-      }
-    }, {
-      onSuccess: () => {
-        toast.success('Nilai berhasil disimpan!');
-        navigate(path.lepkom.penugasan.project.default);
+    submitMutation.mutate(
+      {
+        calasId,
+        examSessionId,
+        deskripsi: data.deskripsi,
+        kriteria: {
+          penguasaan: Number(data.penguasaan),
+          kreatifitas: Number(data.kreatifitas),
+          kontribusi: Number(data.kontribusi),
+          presentasi: Number(data.presentasi),
+          motivasi: Number(data.motivasi),
+          interpersonal: Number(data.interpersonal),
+          integritas: Number(data.integritas),
+          potensi: Number(data.potensi),
+        },
       },
-      onError: (error: any) => {
-        toast.error(error?.response?.data?.message || 'Gagal menyimpan nilai');
+      {
+        onSuccess: () => {
+          toast.success('Nilai berhasil disimpan!');
+          navigate(path.lepkom.penugasan.project.default);
+        },
+        onError: (error: any) => {
+          toast.error(error?.response?.data?.message || 'Gagal menyimpan nilai');
+        },
       }
-    });
+    );
   };
-
 
   return (
     <ContentLayout>
-      <div className="max-w-4xl mx-auto space-y-6">
-        <div className="flex items-center gap-4">
-          <Button variant="outline" onClick={() => navigate(path.lepkom.penugasan.project.default)} className="h-10 w-10 p-0 rounded-full hover:bg-lepkom-green hover:text-white transition-colors">
-            <FiArrowLeft className="w-5 h-5" />
-          </Button>
-          <div>
-            <h1 className="text-2xl font-bold text-gray-900">Form Penilaian Project</h1>
-            <p className="text-sm text-gray-500">Berikan penilaian yang objektif kepada Calon Asisten.</p>
+      {/* Page header */}
+      <div className="flex items-center gap-3.5 mb-6">
+        <Button
+          variant="outline"
+          onClick={() => navigate(path.lepkom.penugasan.project.default)}
+          className="h-10 w-10 p-0 rounded-full flex-shrink-0"
+        >
+          <FiArrowLeft className="w-5 h-5" />
+        </Button>
+        <div>
+          <h1 className="text-2xl font-bold text-gray-900">Form Penilaian Project &amp; Personal</h1>
+          <p className="text-sm text-gray-500 mt-0.5">Wawancara Project &amp; Personal (Day 2)</p>
+        </div>
+      </div>
+
+      {/* Two-column layout: Kolom 1 (30% sticky) & Kolom 2 (70% scrollable) */}
+      <div className="grid grid-cols-1 lg:grid-cols-[30%_1fr] gap-6 items-start">
+        {/* ── Left sticky column — 30% ────────────────────────────── */}
+        <div className="w-full sticky top-6 flex flex-col gap-4">
+          {/* Calas info card */}
+          <CalasInfoCard calas={calas} isLoading={isDetailLoading && !calas} />
+
+          {/* Total score card — Grade sejajar dengan Skor 0.00/100 */}
+          <div className="rounded-xl border border-gray-200 bg-white p-5 shadow-sm">
+            <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3">
+              Total Rata-Rata Sementara
+            </p>
+            <div className="flex items-center justify-between gap-3">
+              <div className="flex items-baseline gap-1">
+                <span className="text-3xl font-extrabold text-lepkom-green leading-none">
+                  {totalScore.toFixed(2)}
+                </span>
+                <span className="text-sm text-gray-400 font-medium">/ 100</span>
+              </div>
+              <span
+                className={`inline-flex items-center px-3 py-1 rounded-lg text-xs font-bold border ${currentGrade.badgeClass}`}
+              >
+                Grade {currentGrade.grade} — {currentGrade.label}
+              </span>
+            </div>
           </div>
         </div>
 
-        {calas && (
-          <Card className="p-4 bg-gradient-to-r from-green-50 to-white border-l-4 border-l-lepkom-green shadow-sm flex items-center justify-between gap-4">
-            <div className="flex items-center gap-4">
-              <div className="bg-white shadow-sm p-3 rounded-full text-lepkom-green border border-green-100">
-                <FiUser className="w-6 h-6" />
-              </div>
-              <div>
-                <h3 className="font-bold text-gray-800 text-lg">{calas.namaCalas}</h3>
-                <p className="text-sm text-gray-600">NPM: {calas.npm} • Kelas: {calas.kelas} • Jurusan: {calas.jurusan}</p>
-              </div>
-            </div>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => window.open(`${path.lepkom.masterData.calas.detailCalas}/${calas._id}`, '_blank')}
-              className="mt-2 text-lepkom-green border-lepkom-green hover:bg-lepkom-green hover:text-white transition-colors"
-            >
-              Lihat Detail
-            </Button>
-          </Card>
-        )}
+        {/* ── Right scrollable column — 70% ───────────────────────── */}
+        <div className="w-full min-w-0 flex flex-col gap-5 pb-12">
+          {/* Rubric scale */}
+          <RubricScaleCard />
 
-        <Card className="p-6 shadow-sm border-gray-200">
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
-              {[
-                { name: 'penguasaan', label: '1. Penguasaan' },
-                { name: 'kreatifitas', label: '2. Kreatifitas' },
-                { name: 'kontribusi', label: '3. Kontribusi' },
-                { name: 'presentasi', label: '4. Presentasi' },
-                { name: 'motivasi', label: '5. Motivasi' },
-                { name: 'interpersonal', label: '6. Interpersonal' },
-                { name: 'integritas', label: '7. Integritas' },
-                { name: 'potensi', label: '8. Potensi' }
-              ].map((fieldData) => (
-                <div key={fieldData.name} className="group">
-                  <label className="block text-sm font-semibold text-gray-700 mb-2 group-focus-within:text-lepkom-green transition-colors">
-                    {fieldData.label} (0-100)
-                  </label>
-                  <div className="relative">
-                    <Controller
-                      name={fieldData.name as keyof z.infer<typeof schema>}
-                      control={control}
-                      render={({ field }) => (
-                        <input
-                          type="number"
-                          {...field}
-                          onChange={(e) => handleScoreInput(e.target.value, field.onChange)}
-                          value={field.value === 0 && watchValues[fieldData.name as keyof typeof watchValues] !== 0 ? '' : field.value}
-                          className={`w-full border rounded-xl px-4 py-3 bg-gray-50 focus:bg-white transition-all outline-none focus:ring-2 focus:ring-lepkom-green/20 ${errors[fieldData.name as keyof typeof errors] ? 'border-red-500 focus:border-red-500' : 'border-gray-200 focus:border-lepkom-green'}`}
-                          placeholder={`Nilai ${fieldData.label.split('. ')[1]}`}
-                        />
-                      )}
-                    />
-                    {Number(watchValues[fieldData.name as keyof typeof watchValues]) > 0 && !errors[fieldData.name as keyof typeof errors] && (
-                      <div className="absolute right-3 top-1/2 -translate-y-1/2 w-2 h-2 rounded-full bg-lepkom-green"></div>
-                    )}
+          {/* Form card */}
+          <div className="rounded-xl border border-gray-200 bg-white shadow-sm p-6 sm:p-8">
+            <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
+              {/* Each criteria section */}
+              {PROJECT_CRITERIA_SECTIONS.map((section, secIdx) => (
+                <div key={secIdx} className="space-y-4">
+                  {/* Section header */}
+                  <div className="border-b border-gray-100">
+                    <h3 className="text-lg font-bold text-gray-900">
+                      {SECTION_TITLES[secIdx].title}
+                    </h3>
+                    <p className="text-sm text-gray-500 mt-0.5 mb-5">
+                      {SECTION_TITLES[secIdx].subtitle}
+                    </p>
+                    <p className="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-0.5">
+                      Kriteria Penilaian
+                    </p>
                   </div>
-                  {errors[fieldData.name as keyof typeof errors] && <p className="text-red-500 text-xs mt-1.5">{errors[fieldData.name as keyof typeof errors]?.message as string}</p>}
+
+                  {/* Criteria grid */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                    {section.items.map((item) => {
+                      const val = watchValues[item.name as keyof FormValues];
+                      const numVal = Number(val) || 0;
+                      const fieldGrade = getScoreGrade(numVal);
+                      const fieldError = errors[item.name as keyof typeof errors];
+                      const hasValue =
+                        typeof val === 'number' ? val > 0 : val !== '' && val !== undefined;
+
+                      return (
+                        <div key={item.name} className="flex flex-col gap-1.5">
+                          <div className="flex items-center justify-between">
+                            <label className="text-base font-semibold text-gray-900">
+                              {item.number}. {item.label}
+                            </label>
+                            {hasValue && !fieldError && (
+                              <span
+                                className={`text-xs font-bold px-2 py-0.5 rounded border ${fieldGrade.badgeClass}`}
+                              >
+                                Grade {fieldGrade.grade}
+                              </span>
+                            )}
+                          </div>
+                          <p className="text-sm text-gray-500 leading-relaxed min-h-[36px]">
+                            {item.description}
+                          </p>
+                          <Controller
+                            name={item.name as keyof FormValues}
+                            control={control}
+                            render={({ field }) => (
+                              <input
+                                type="number"
+                                min={0}
+                                max={100}
+                                style={{ MozAppearance: 'textfield' } as React.CSSProperties}
+                                className={`[appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none w-full border rounded-lg px-3.5 py-2.5 text-sm font-semibold bg-gray-50 focus:bg-white outline-none focus:ring-2 focus:ring-lepkom-green/20 transition-all ${
+                                  fieldError
+                                    ? 'border-red-400 focus:border-red-400'
+                                    : 'border-gray-200 focus:border-lepkom-green'
+                                }`}
+                                placeholder="0 – 100"
+                                value={
+                                  typeof field.value === 'number' && field.value === 0
+                                    ? ''
+                                    : field.value === ''
+                                    ? ''
+                                    : field.value
+                                }
+                                onChange={(e) => handleScoreInput(e.target.value, field.onChange)}
+                              />
+                            )}
+                          />
+                          {fieldError && (
+                            <p className="text-red-500 text-xs font-medium">
+                              {fieldError.message as string}
+                            </p>
+                          )}
+                        </div>
+                      );
+                    })}
+                  </div>
                 </div>
               ))}
-            </div>
 
-            <div className="pt-6 border-t border-gray-100">
-              <div className="bg-gradient-to-r from-gray-50 to-gray-100 p-5 rounded-xl flex justify-between items-center border border-gray-200 shadow-inner">
-                <span className="font-semibold text-gray-600">Total Skor Rata-Rata Sementara:</span>
-                <div className="flex items-baseline gap-1">
-                  <span className="text-3xl font-extrabold text-lepkom-green">{totalScore.toFixed(2)}</span>
-                  <span className="text-sm font-medium text-gray-500">/ 100</span>
-                </div>
-              </div>
-            </div>
+              {/* Divider */}
+              <div className="border-t border-gray-100" />
 
-            <div className="group">
-              <label className="block text-sm font-semibold text-gray-700 mb-2 group-focus-within:text-lepkom-green transition-colors">
-                Deskripsi Penilai
-              </label>
-              <Controller
-                name="deskripsi"
-                control={control}
-                render={({ field }) => (
-                  <textarea
-                    {...field}
-                    rows={4}
-                    className={`w-full border rounded-xl px-4 py-3 bg-gray-50 focus:bg-white transition-all outline-none focus:ring-2 focus:ring-lepkom-green/20 resize-none ${errors.deskripsi ? 'border-red-500 focus:border-red-500' : 'border-gray-200 focus:border-lepkom-green'}`}
-                    placeholder="Berikan catatan, tanggapan, atau evaluasi kualitatif mengenai performa ujian project calas..."
-                  />
+              {/* Deskripsi */}
+              <div className="flex flex-col gap-1.5">
+                <label className="text-base font-semibold text-gray-900">
+                  Deskripsi &amp; Catatan Penilai
+                </label>
+                <p className="text-sm text-gray-500">
+                  Tuliskan evaluasi naratif, catatan kepribadian, dan umpan balik presentasi project
+                  calas.
+                </p>
+                <Controller
+                  name="deskripsi"
+                  control={control}
+                  render={({ field }) => (
+                    <textarea
+                      {...field}
+                      rows={4}
+                      className={`w-full border rounded-lg px-3.5 py-2.5 text-sm bg-gray-50 focus:bg-white outline-none focus:ring-2 focus:ring-lepkom-green/20 resize-none transition-all ${
+                        errors.deskripsi
+                          ? 'border-red-400 focus:border-red-400'
+                          : 'border-gray-200 focus:border-lepkom-green'
+                      }`}
+                      placeholder="Contoh: Penguasaan arsitektur project sangat mendalam, komunikasi lugas dan percaya diri saat presentasi..."
+                    />
+                  )}
+                />
+                {errors.deskripsi && (
+                  <p className="text-red-500 text-xs font-medium">{errors.deskripsi.message}</p>
                 )}
-              />
-              {errors.deskripsi && <p className="text-red-500 text-xs mt-1.5">{errors.deskripsi.message as string}</p>}
-            </div>
+              </div>
 
-            <div className="flex justify-end gap-3 pt-6 border-t border-gray-100">
-              <Button type="button" variant="outline" onClick={() => navigate('/lepkom/penugasan/penilaian-project')} className="rounded-xl px-6">
-                Batal
-              </Button>
-              <Button type="submit" disabled={submitMutation.isPending} className="bg-lepkom-green hover:bg-lepkom-green/90 text-white gap-2 rounded-xl px-8 shadow-md hover:shadow-lg transition-all">
-                <FiSave /> {submitMutation.isPending ? 'Menyimpan...' : 'Simpan Penilaian'}
-              </Button>
-            </div>
-          </form>
-        </Card>
+              {/* Actions */}
+              <div className="flex justify-end items-center gap-3 pt-3 border-t border-gray-100">
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => navigate(path.lepkom.penugasan.project.default)}
+                  className="rounded-lg px-5 text-sm font-medium"
+                >
+                  Batal
+                </Button>
+                <Button
+                  type="submit"
+                  disabled={submitMutation.isPending}
+                  className="bg-lepkom-green hover:bg-lepkom-green/90 text-white gap-2 rounded-lg px-6 text-sm font-semibold shadow-sm hover:shadow transition-all"
+                >
+                  <FiSave className="w-4 h-4" />
+                  {submitMutation.isPending ? 'Menyimpan...' : 'Simpan Penilaian'}
+                </Button>
+              </div>
+            </form>
+          </div>
+        </div>
       </div>
     </ContentLayout>
   );
