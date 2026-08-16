@@ -24,8 +24,8 @@ const ForceChangePasswordPage = () => {
       toast.error('Kedua field password wajib diisi');
       return;
     }
-    if (newPassword.length < 6) {
-      toast.error('Password minimal 6 karakter');
+    if (newPassword.length < 8) {
+      toast.error('Password baru minimal 8 karakter');
       return;
     }
     if (newPassword !== confirmPassword) {
@@ -54,12 +54,14 @@ const ForceChangePasswordPage = () => {
           <label className="block text-sm font-medium text-gray-700 mb-1.5">Password Baru</label>
           <Input 
             type="password" 
-            placeholder="Masukkan password baru" 
+            placeholder="Masukkan password baru (min. 8 karakter)" 
             value={newPassword}
             onChange={(e) => setNewPassword(e.target.value)}
             required
+            minLength={8}
             className="w-full h-11"
           />
+          <p className="text-xs text-gray-400 mt-1">Gunakan minimal 8 karakter dengan kombinasi huruf dan angka/simbol.</p>
         </div>
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1.5">Konfirmasi Password Baru</label>
@@ -69,6 +71,7 @@ const ForceChangePasswordPage = () => {
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
             required
+            minLength={8}
             className="w-full h-11"
           />
         </div>

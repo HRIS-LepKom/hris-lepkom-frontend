@@ -51,11 +51,11 @@ export const LoginFormCalas: React.FC = () => {
     <form className="space-y-5" onSubmit={handleSubmit}>
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-1.5">
-          NPM atau Email
+          ID Calas, NPM, atau Email
         </label>
         <Input 
           type="text" 
-          placeholder="12345678" 
+          placeholder="Contoh: CLJ526001 / 10124910 / email@..." 
           required 
           className="w-full h-11"
           value={identifier}
