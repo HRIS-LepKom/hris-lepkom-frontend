@@ -14,6 +14,7 @@ import { useGetDetailCalas } from '@/features/master-data/modules/detail-calas/a
 import { toast } from 'react-hot-toast';
 import { RubricScaleCard } from '../../../shared/components/RubricScaleCard';
 import { CalasInfoCard } from '../../../shared/components/CalasInfoCard';
+import { QuestionCardSection } from '../../../shared/components/QuestionCardSection';
 import { PRAKTEK_CRITERIA_GUIDELINES, getScoreGrade } from '../../../shared/constants/rubric';
 
 const schema = z.object({
@@ -124,44 +125,15 @@ const FormPraktek = () => {
         <div>
           <h1 className="text-2xl font-bold text-gray-900">Form Penilaian Praktek</h1>
           <p className="text-sm text-gray-500 mt-0.5">
-            Wawancara Praktik &amp; Pemahaman Materi (Day 1)
+            Wawancara Praktik &amp; Pemahaman Materi
           </p>
         </div>
       </div>
 
       {/* Two-column layout: Kolom 1 (30% sticky) & Kolom 2 (70% scrollable) */}
-      <div className="grid grid-cols-1 lg:grid-cols-[30%_1fr] gap-6 items-start">
-        {/* ── Left sticky column — 30% ────────────────────────────── */}
-        <div className="w-full sticky top-6 flex flex-col gap-4">
-          {/* Calas info card */}
-          <CalasInfoCard calas={calas} isLoading={isDetailLoading && !calas} />
-
-          {/* Total score card — Grade sejajar dengan Skor 0.00/100 */}
-          <div className="rounded-xl border border-gray-200 bg-white p-5 shadow-sm">
-            <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3">
-              Total Rata-Rata Sementara
-            </p>
-            <div className="flex items-center justify-between gap-3">
-              <div className="flex items-baseline gap-1">
-                <span className="text-3xl font-extrabold text-lepkom-green leading-none">
-                  {totalScore.toFixed(2)}
-                </span>
-                <span className="text-sm text-gray-400 font-medium">/ 100</span>
-              </div>
-              <span
-                className={`inline-flex items-center px-3 py-1 rounded-lg text-xs font-bold border ${currentGrade.badgeClass}`}
-              >
-                Grade {currentGrade.grade} — {currentGrade.label}
-              </span>
-            </div>
-          </div>
-        </div>
-
-        {/* ── Right scrollable column — 70% ───────────────────────── */}
+      <div className="grid grid-cols-1 lg:grid-cols-[70%_1fr] gap-6 items-start overflow-y-auto max-h-[800px]">
+        {/* Left scrollable column 70%*/}
         <div className="w-full min-w-0 flex flex-col gap-5 pb-12">
-          {/* Rubric scale */}
-          <RubricScaleCard />
-
           {/* Form card */}
           <div className="rounded-xl border border-gray-200 bg-white shadow-sm p-6 sm:p-8">
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
@@ -294,7 +266,36 @@ const FormPraktek = () => {
             </form>
           </div>
         </div>
+        {/* Right sticky column 30% */}
+        <div className="w-full sticky top-6 flex flex-col gap-4">
+          {/* Calas info card */}
+          <CalasInfoCard calas={calas} isLoading={isDetailLoading && !calas} />
+
+          {/* Total score card Grade sejajar dengan Skor 0.00/100 */}
+          <div className="rounded-xl border border-gray-200 bg-white p-5 shadow-sm">
+            <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3">
+              Total Rata-Rata Sementara
+            </p>
+            <div className="flex items-center justify-between gap-3">
+              <div className="flex items-baseline gap-1">
+                <span className="text-3xl font-extrabold text-lepkom-green leading-none">
+                  {totalScore.toFixed(2)}
+                </span>
+                <span className="text-sm text-gray-400 font-medium">/ 100</span>
+              </div>
+              <span
+                className={`inline-flex items-center px-3 py-1 rounded-lg text-xs font-bold border ${currentGrade.badgeClass}`}
+              >
+                Grade {currentGrade.grade} — {currentGrade.label}
+              </span>
+            </div>
+          </div>
+          <RubricScaleCard />
+        </div>
       </div>
+
+      {/* Question Card */}
+      <QuestionCardSection />
     </ContentLayout>
   );
 };

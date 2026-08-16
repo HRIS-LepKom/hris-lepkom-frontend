@@ -20,7 +20,7 @@ export const calasSoalMenu = {
     },
     {
       key: 'uploadJawaban',
-      label: 'upload Jawaban',
+      label: 'Upload Jawaban',
       path: path.lepkom.calasSoal.uploadJawaban.default,
       description: 'Upload File Ujian',
       icon: TiUpload,
