@@ -6,9 +6,9 @@ import { Search, SlidersHorizontal } from 'lucide-react';
 
 const tingkatOptions = [
   { value: '', label: 'Semua Tingkat' },
-  { value: '1', label: 'Tingkat 1 (Mudah)' },
-  { value: '2', label: 'Tingkat 2 (Sedang)' },
-  { value: '3', label: 'Tingkat 3 (Sulit)' },
+  { value: '1', label: 'Tingkat 1' },
+  { value: '2', label: 'Tingkat 2' },
+  { value: '3', label: 'Tingkat 3' },
 ];
 
 const DaftarSoalFilter: React.FC = () => {

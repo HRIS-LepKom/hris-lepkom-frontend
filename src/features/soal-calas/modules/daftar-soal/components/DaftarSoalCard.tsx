@@ -28,9 +28,9 @@ const DaftarSoalCard: React.FC<DaftarSoalCardProps> = ({ soal }) => {
 
   const getTingkatLabel = (tingkat: number) => {
     switch (tingkat) {
-      case 1: return 'Mudah (Tingkat 1)';
-      case 2: return 'Sedang (Tingkat 2)';
-      case 3: return 'Sulit (Tingkat 3)';
+      case 1: return 'Tingkat 1';
+      case 2: return 'Tingkat 2';
+      case 3: return 'Tingkat 3';
       default: return `Tingkat ${tingkat}`;
     }
   };
