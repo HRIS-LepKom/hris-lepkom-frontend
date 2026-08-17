@@ -1,5 +1,5 @@
 import { createBrowserRouter } from 'react-router-dom';
-import { UserLayout } from '@/components/layout';
+import UserLayout from '@/components/layout/UserLayout';
 import ProtectedRoute from '@/components/layout/protected-view/ProtectedRoute';
 import ProtectedAccessPermission from '@/components/layout/protected-view/ProtectedAccessPermission';
 
@@ -19,23 +19,9 @@ import {
   jadwalRoute
 } from './config/route';
 
-import {
-  dashboardMenu,
-  masterDataMenu,
-  biodataMenu,
-  calasSoalMenu,
-  penugasanMenu,
-  jadwalMenu
-} from './config/menu';
+import { mainMenus } from './config/menu';
 
-export const mainMenus = [
-  dashboardMenu,
-  masterDataMenu,
-  biodataMenu,
-  calasSoalMenu,
-  penugasanMenu,
-  jadwalMenu
-];
+export { mainMenus };
 
 export const mainRoutes = createBrowserRouter(
   [

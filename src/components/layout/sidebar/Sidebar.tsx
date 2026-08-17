@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { mainMenus } from '@/routes/main';
+import { mainMenus } from '@/routes/config/menu';
 import { NavigationItem } from './modules';
 import { useAuthStore } from '@/features/auth/shared/store';
 import { FiChevronLeft, FiChevronRight } from 'react-icons/fi';
