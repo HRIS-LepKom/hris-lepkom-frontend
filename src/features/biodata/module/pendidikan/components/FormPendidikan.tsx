@@ -38,6 +38,7 @@ const FormPendidikan = () => {
   const { register, handleSubmit, control, formState: { errors, isSubmitting, isDirty }, reset } = useForm<PendidikanFormData>({
     resolver: zodResolver(pendidikanSchema),
     defaultValues: {
+      wilayah: '' as any,
       isKursusDelete: false,
     }
   });
@@ -53,7 +54,7 @@ const FormPendidikan = () => {
       reset({
         kelas: d.kelas || '',
         asalSekolah: d.asalSekolah || '',
-        wilayah: (d.wilayah as 'SALEMBA' | 'DEPOK' | 'KALIMALANG') || 'DEPOK',
+        wilayah: (d.wilayah as 'SALEMBA' | 'DEPOK' | 'KALIMALANG') || ('' as any),
         jurusan: d.jurusan || '',
         ipk: d.ipk || 0,
         kursusSemester: {
@@ -146,6 +147,7 @@ const FormPendidikan = () => {
               className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-lepkom-green disabled:bg-gray-100 disabled:cursor-not-allowed ${errors.wilayah ? 'border-red-500' : 'border-gray-300'}`}
               {...register('wilayah')}
             >
+              <option value="" disabled>-- Pilih Wilayah Kampus --</option>
               <option value="DEPOK">DEPOK</option>
               <option value="KALIMALANG">KALIMALANG</option>
               <option value="SALEMBA">SALEMBA</option>
