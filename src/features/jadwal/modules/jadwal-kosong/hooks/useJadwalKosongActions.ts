@@ -1,13 +1,15 @@
 import React from 'react';
+import toast from 'react-hot-toast';
 import { useDialogStore } from '@/hooks/globalStore/useDialogStore';
 import { useJadwalKosongStore } from '../store/useJadwalKosongStore';
-import type { JadwalKosong } from '../api/jadwalKosong.api';
+import { useDeleteJadwalKosong, type JadwalKosong } from '../api/jadwalKosong.api';
 import FormCreateJadwalKosong from '../components/FormCreateJadwalKosong';
 import FormEditJadwalKosong from '../components/FormEditJadwalKosong';
 
 export const useJadwalKosongActions = () => {
-  const { setDialogContent, setOpenDialog } = useDialogStore();
+  const { setDialogContent, setOpenDialog, setAlert, resetAlert } = useDialogStore();
   const { setSelectedJadwalKosong } = useJadwalKosongStore();
+  const deleteMutation = useDeleteJadwalKosong();
 
   const openCreateModal = () => {
     setDialogContent({
@@ -34,8 +36,31 @@ export const useJadwalKosongActions = () => {
     });
   };
 
+  const openDeleteModal = (data: JadwalKosong) => {
+    setAlert({
+      type: 'confirm',
+      text: {
+        heading: 'Hapus Jadwal Kosong',
+        body: `Apakah Anda yakin ingin menghapus jadwal kosong "${data.judul}" beserta seluruh entrinya? Tindakan ini tidak dapat dibatalkan.`,
+      },
+      btnTrue: { text: 'Ya, Hapus' },
+      btnFalse: { text: 'Batal' },
+      onTrueCallback: async () => {
+        resetAlert();
+        try {
+          await deleteMutation.mutateAsync(data._id);
+          toast.success('Jadwal kosong berhasil dihapus');
+        } catch (error: any) {
+          toast.error(error?.response?.data?.message || 'Gagal menghapus jadwal kosong');
+        }
+      },
+      onFalseCallback: () => resetAlert(),
+    });
+  };
+
   return {
     openCreateModal,
     openEditModal,
+    openDeleteModal,
   };
 };

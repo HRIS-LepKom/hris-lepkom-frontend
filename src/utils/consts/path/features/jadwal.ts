@@ -4,5 +4,8 @@ export const jadwalPaths = {
     default : '/lepkom/jadwal/jadwal-kosong',
     detail : '/lepkom/jadwal/jadwal-kosong/detail'
   },
-  jadwalAsisten : { default : '/lepkom/jadwal/jadwal-asisten',}
+  jadwalAsisten : { 
+    default : '/lepkom/jadwal/jadwal-asisten',
+    detail : '/lepkom/jadwal/jadwal-asisten/detail'
+  }
 };

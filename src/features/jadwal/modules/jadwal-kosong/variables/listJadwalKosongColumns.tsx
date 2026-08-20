@@ -1,16 +1,18 @@
 import type { JadwalKosong } from '../api/jadwalKosong.api';
 import { Button } from '@/components/ui/Button';
-import { FiEdit2, FiEye } from 'react-icons/fi';
+import { FiEdit2, FiEye, FiTrash2 } from 'react-icons/fi';
 import { EmptyCellText } from '@/components/shared/EmptyCellText';
 
 export const getJadwalKosongColumns = (
   actions: {
     handleEdit: (row: JadwalKosong) => void;
     handleDetail: (row: JadwalKosong) => void;
+    handleDelete: (row: JadwalKosong) => void;
   },
   page: number = 1,
   limit: number = 10,
-  isAuthorized: boolean = false
+  isAuthorized: boolean = false,
+  isSuperAdmin: boolean = false
 ) => {
   const columns: any[] = [
     {
@@ -88,6 +90,17 @@ export const getJadwalKosongColumns = (
                 onClick={() => actions.handleEdit(row)}
               >
                 <FiEdit2 className="w-4 h-4" />
+              </Button>
+            )}
+            {isSuperAdmin && (
+              <Button
+                variant="outline"
+                size="icon"
+                title="Hapus Jadwal"
+                className="h-8 w-8 text-red-600 hover:text-red-700 hover:bg-red-50"
+                onClick={() => actions.handleDelete(row)}
+              >
+                <FiTrash2 className="w-4 h-4" />
               </Button>
             )}
           </div>

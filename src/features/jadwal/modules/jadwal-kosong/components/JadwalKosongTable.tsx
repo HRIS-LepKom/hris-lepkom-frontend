@@ -16,6 +16,7 @@ export const JadwalKosongTable = () => {
   const navigate = useNavigate();
   const { user } = useAuthStore();
   const isAllowedToManage = user?.role === 'super_admin' || user?.role === 'pj_jadwal';
+  const isSuperAdmin = user?.role === 'super_admin';
 
   const {
     columnFilters,
@@ -31,9 +32,10 @@ export const JadwalKosongTable = () => {
   const columns = useMemo(
     () => getJadwalKosongColumns({
       handleEdit: actions.openEditModal,
+      handleDelete: actions.openDeleteModal,
       handleDetail: (row) => navigate(`${DETAIL_PATH}?id=${row._id}`),
-    }, currentPage, pageSize, isAllowedToManage),
-    [actions, currentPage, pageSize, isAllowedToManage, navigate]
+    }, currentPage, pageSize, isAllowedToManage, isSuperAdmin),
+    [actions, currentPage, pageSize, isAllowedToManage, isSuperAdmin, navigate]
   );
 
   const queryParams = new URLSearchParams();

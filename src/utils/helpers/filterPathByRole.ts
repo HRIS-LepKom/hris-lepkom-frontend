@@ -24,6 +24,8 @@ export const filterPathByRole = (role: UserRole): string[] => {
       path.lepkom.jadwal.default,
       path.lepkom.jadwal.jadwalKosong.default,
       path.lepkom.jadwal.jadwalKosong.detail,
+      path.lepkom.jadwal.jadwalAsisten.default,
+      path.lepkom.jadwal.jadwalAsisten.detail,
     ],
     penanggung_jawab_ruangan: [
       path.lepkom.dashboard.default,
@@ -41,6 +43,8 @@ export const filterPathByRole = (role: UserRole): string[] => {
       path.lepkom.jadwal.default,
       path.lepkom.jadwal.jadwalKosong.default,
       path.lepkom.jadwal.jadwalKosong.detail,
+      path.lepkom.jadwal.jadwalAsisten.default,
+      path.lepkom.jadwal.jadwalAsisten.detail,
     ],
     koordinator_lapangan: [
       path.lepkom.dashboard.default,
@@ -58,6 +62,8 @@ export const filterPathByRole = (role: UserRole): string[] => {
       path.lepkom.jadwal.default,
       path.lepkom.jadwal.jadwalKosong.default,
       path.lepkom.jadwal.jadwalKosong.detail,
+      path.lepkom.jadwal.jadwalAsisten.default,
+      path.lepkom.jadwal.jadwalAsisten.detail,
     ],
     asisten_penilai: [
       path.lepkom.dashboard.default,
@@ -76,6 +82,8 @@ export const filterPathByRole = (role: UserRole): string[] => {
       path.lepkom.jadwal.default,
       path.lepkom.jadwal.jadwalKosong.default,
       path.lepkom.jadwal.jadwalKosong.detail,
+      path.lepkom.jadwal.jadwalAsisten.default,
+      path.lepkom.jadwal.jadwalAsisten.detail,
     ],
     asisten: [
       path.lepkom.masterData.materi.default,
@@ -85,6 +93,8 @@ export const filterPathByRole = (role: UserRole): string[] => {
       path.lepkom.jadwal.default,
       path.lepkom.jadwal.jadwalKosong.default,
       path.lepkom.jadwal.jadwalKosong.detail,
+      path.lepkom.jadwal.jadwalAsisten.default,
+      path.lepkom.jadwal.jadwalAsisten.detail,
     ],
     staff: [
       path.lepkom.masterData.materi.default,
@@ -95,6 +105,8 @@ export const filterPathByRole = (role: UserRole): string[] => {
       path.lepkom.jadwal.default,
       path.lepkom.jadwal.jadwalKosong.default,
       path.lepkom.jadwal.jadwalKosong.detail,
+      path.lepkom.jadwal.jadwalAsisten.default,
+      path.lepkom.jadwal.jadwalAsisten.detail,
     ],
     calas: [
       path.lepkom.dashboard.default,

@@ -64,3 +64,16 @@ export const useUpdateJadwalKosong = () => {
     },
   });
 };
+
+export const useDeleteJadwalKosong = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async (id: string) => {
+      const { data } = await api.delete<ApiResponse<null>>(`/api/jadwal/kosong/${id}`);
+      return data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: jadwalKosongKeys.lists() });
+    },
+  });
+};
